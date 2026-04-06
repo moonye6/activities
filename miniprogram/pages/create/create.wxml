@@ -1,6 +1,12 @@
 <!-- pages/create/create.wxml — 创建活动 -->
 <view class="page create-page">
   <view class="create-form">
+    <!-- 大字引导语 -->
+    <view class="create-hero">
+      <text class="create-hero__title">今天想约点什么？</text>
+      <text class="create-hero__sub">填写时间和类型就能发起 ✨</text>
+    </view>
+
     <!-- 活动标题 -->
     <view class="form-section">
       <input
@@ -17,11 +23,11 @@
 
     <!-- 表单卡片 -->
     <view class="form-card card">
-      <!-- 活动类型 -->
+      <!-- 活动类型（必填） -->
       <view class="form-cell" bindtap="onSelectType">
         <view class="form-cell__left">
           <text class="form-cell__icon">{{typeInfo.emoji || '🎯'}}</text>
-          <text class="form-cell__label">活动类型</text>
+          <text class="form-cell__label">活动类型 <text class="form-cell__required">*</text></text>
         </view>
         <view class="form-cell__right">
           <text class="form-cell__value {{form.type ? 'form-cell__value--selected' : ''}}">
@@ -32,12 +38,12 @@
       </view>
       <view class="form-divider"></view>
 
-      <!-- 活动时间 -->
+      <!-- 活动时间（必填） -->
       <picker mode="multiSelector" value="{{timePickerVal}}" range="{{timeRange}}" bindchange="onTimeChange">
         <view class="form-cell">
           <view class="form-cell__left">
             <text class="form-cell__icon">🕐</text>
-            <text class="form-cell__label">活动时间</text>
+            <text class="form-cell__label">活动时间 <text class="form-cell__required">*</text></text>
           </view>
           <view class="form-cell__right">
             <text class="form-cell__value {{form.time ? 'form-cell__value--selected' : ''}}">
@@ -49,14 +55,14 @@
       </picker>
       <view class="form-divider"></view>
 
-      <!-- 活动地点 -->
-      <view class="form-cell">
+      <!-- 活动地点（可选，视觉弱化） -->
+      <view class="form-cell form-cell--optional">
         <view class="form-cell__left">
-          <text class="form-cell__icon">📍</text>
-          <text class="form-cell__label">活动地点</text>
+          <text class="form-cell__icon form-cell__icon--optional">📍</text>
+          <text class="form-cell__label form-cell__label--optional">活动地点</text>
         </view>
         <input
-          class="form-cell__input"
+          class="form-cell__input form-cell__input--optional"
           placeholder="填写地点（可选）"
           placeholder-class="form-cell__placeholder"
           value="{{form.location}}"
@@ -91,6 +97,7 @@
         bindtap="onVisibilityChange"
         data-value="{{item.value}}"
       >
+        <text class="visibility-item__icon">{{item.icon}}</text>
         <text class="visibility-item__label">{{item.label}}</text>
         <text class="visibility-item__desc">{{item.desc}}</text>
       </view>

@@ -15,7 +15,7 @@
 .header-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #FF6B35 0%, #FF8C5A 50%, #FFB347 100%);
+  background: linear-gradient(135deg, #07C160 0%, #0FD970 50%, #38E98A 100%);
   border-radius: 0 0 48rpx 48rpx;
 }
 
@@ -158,7 +158,7 @@
 
 .nick-confirm-btn {
   font-size: 24rpx;
-  color: #FF6B35;
+  color: #07C160;
   background: white;
   border-radius: 30rpx;
   padding: 0 32rpx;

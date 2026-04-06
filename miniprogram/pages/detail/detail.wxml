@@ -86,15 +86,23 @@
           </view>
         </view>
 
-        <!-- 人数进度条 -->
-        <view class="participants-progress">
-          <view class="progress-bar-full">
+        <!-- 环形进度条 -->
+        <view class="ring-progress-wrap">
+          <view class="ring-progress-area">
             <view
-              class="progress-bar-fill"
-              style="width:{{progressPct}}%;background:{{typeInfo.color}}"
-            ></view>
+              class="ring-progress"
+              style="background: conic-gradient(var(--color-primary) calc({{progressPct}} * 1%), var(--color-bg) 0)"
+            >
+              <view class="ring-inner">
+                <text class="ring-inner__pct">{{progressPct}}%</text>
+                <text class="ring-inner__label">成局</text>
+              </view>
+            </view>
           </view>
-          <text class="progress-label">还需 {{activity.maxCount - rsvpCounts.yes}} 人才满员</text>
+          <view class="ring-progress-info">
+            <text class="ring-info__hint">还需 <text class="ring-info__num">{{activity.maxCount - rsvpCounts.yes}}</text> 人满员</text>
+            <text class="ring-info__total">目标 {{activity.maxCount}} 人</text>
+          </view>
         </view>
 
         <!-- 参与者头像列表 -->

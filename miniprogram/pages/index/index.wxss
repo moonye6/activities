@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 16rpx 32rpx;
-  background: var(--color-white);
+  background: var(--color-surface);
   border-bottom: 1rpx solid var(--color-border);
 }
 
@@ -52,7 +52,7 @@
 /* Tab 栏 */
 .tab-bar {
   display: flex;
-  background: var(--color-white);
+  background: var(--color-surface);
   padding: 0 16rpx;
   border-bottom: 1rpx solid var(--color-border);
 }
@@ -114,7 +114,7 @@
   display: flex;
   margin: 0 32rpx 24rpx;
   height: 160rpx;
-  background: var(--color-white);
+  background: var(--color-surface);
   border-radius: var(--radius-lg);
   overflow: hidden;
 }
@@ -182,7 +182,7 @@
 .fab:active,
 .fab--pressed {
   transform: scale(0.92);
-  box-shadow: 0 4rpx 16rpx rgba(255,107,53,0.25);
+  box-shadow: 0 4rpx 16rpx rgba(7,193,96,0.25);
 }
 
 .fab__icon {
@@ -191,4 +191,85 @@
   font-weight: 300;
   line-height: 1;
   margin-top: -4rpx;
+}
+
+.fab__svg {
+  width: 52rpx;
+  height: 52rpx;
+}
+
+/* ══════════════════════════════════
+   空状态 — 引导型插画
+══════════════════════════════════ */
+.empty-guide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 48rpx 80rpx;
+}
+
+.empty-ball-wrap {
+  position: relative;
+  width: 160rpx;
+  height: 180rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.empty-ball {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary-pale) 0%, #C6F4DC 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx rgba(7,193,96,0.18);
+  animation: ball-float 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.empty-ball__emoji {
+  font-size: 60rpx;
+  line-height: 1;
+}
+
+.empty-ball__shadow {
+  width: 80rpx;
+  height: 20rpx;
+  background: rgba(7,193,96,0.15);
+  border-radius: 50%;
+  margin-top: 8rpx;
+  animation: shadow-pulse 2.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes ball-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-16rpx); }
+}
+
+@keyframes shadow-pulse {
+  0%, 100% { transform: scaleX(1);   opacity: 0.6; }
+  50%       { transform: scaleX(0.7); opacity: 0.3; }
+}
+
+.empty-guide__title {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 12rpx;
+}
+
+.empty-guide__desc {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.empty-guide__btn {
+  width: 280rpx;
 }

@@ -167,9 +167,9 @@ const ACTIVITY_TYPES = [
 
 // 可见范围枚举
 const VISIBILITY_OPTIONS = [
-  { value: 'friends', label: '朋友可见', desc: '仅互相关注的好友可见' },
-  { value: 'public', label: '公开', desc: '所有人可见' },
-  { value: 'tags', label: '指定标签', desc: '仅指定标签成员可见' }
+  { value: 'friends', label: '朋友可见', desc: '仅互相关注的好友可见', icon: '👥' },
+  { value: 'public', label: '公开', desc: '所有人可见', icon: '🌐' },
+  { value: 'tags', label: '指定标签', desc: '仅指定标签成员可见', icon: '🏷️' }
 ]
 
 module.exports = {

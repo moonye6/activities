@@ -5,7 +5,7 @@
   flex-direction: row;
   margin: 0 32rpx 24rpx;
   border-radius: var(--radius-lg);
-  background: var(--color-white);
+  background: var(--color-surface);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: transform 0.15s, box-shadow 0.15s;
@@ -92,6 +92,12 @@
 
 .act-card__meta-icon {
   font-size: 22rpx;
+  flex-shrink: 0;
+}
+
+.act-card__meta-svg {
+  width: 28rpx;
+  height: 28rpx;
   flex-shrink: 0;
 }
 

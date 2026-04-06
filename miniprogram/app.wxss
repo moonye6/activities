@@ -1,71 +1,99 @@
-/* app.wxss — 全局样式 */
+/* app.wxss — 全局样式 · 新设计语言 */
 
-/* ============ CSS 变量 ============ */
 page {
-  --color-primary: #FF6B35;
-  --color-primary-light: #FF8C5A;
-  --color-primary-pale: #FFE8DC;
-  --color-primary-bg: #FFF4EF;
+  /* ── 主色系：清爽绿 ── */
+  --color-primary:       #07C160;
+  --color-primary-light: #0FD970;
+  --color-primary-pale:  #E8FAF0;
+  --color-primary-bg:    #F0FBF5;
+  --color-primary-deep:  #059A4C;
 
-  --color-bg: #F7F7F8;
-  --color-white: #FFFFFF;
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #666666;
-  --color-text-tertiary: #AAAAAA;
-  --color-border: #F0F0F0;
+  /* ── 背景与表面 ── */
+  --color-bg:            #F7F8FA;
+  --color-surface:       #FFFFFF;
+  --color-surface-2:     #F2F3F7;
 
-  --color-success: #34C759;
-  --color-danger: #FF3B30;
+  /* ── 文字 ── */
+  --color-text-primary:   #1A1A2E;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary:  #B0B7C3;
+  --color-text-inverse:   #FFFFFF;
+
+  /* ── 语义色 ── */
+  --color-success: #07C160;
+  --color-danger:  #FF3B30;
   --color-warning: #FF9500;
-  --color-info: #007AFF;
+  --color-info:    #3B82F6;
+  --color-border:  #ECEEF2;
 
-  --radius-sm: 8rpx;
-  --radius-md: 16rpx;
-  --radius-lg: 24rpx;
-  --radius-xl: 32rpx;
+  /* ── 圆角：全局大圆角 ── */
+  --radius-xs:   8rpx;
+  --radius-sm:   12rpx;
+  --radius-md:   20rpx;
+  --radius-lg:   28rpx;
+  --radius-xl:   40rpx;
+  --radius-2xl:  56rpx;
   --radius-full: 9999rpx;
 
-  --shadow-sm: 0 2rpx 8rpx rgba(0,0,0,0.06);
-  --shadow-md: 0 4rpx 20rpx rgba(0,0,0,0.10);
-  --shadow-lg: 0 8rpx 40rpx rgba(0,0,0,0.14);
-  --shadow-primary: 0 8rpx 24rpx rgba(255,107,53,0.30);
+  /* ── 阴影：极柔和，无硬描边 ── */
+  --shadow-xs:      0 1rpx 4rpx rgba(0,0,0,0.04);
+  --shadow-sm:      0 2rpx 12rpx rgba(0,0,0,0.06);
+  --shadow-md:      0 6rpx 24rpx rgba(0,0,0,0.08);
+  --shadow-lg:      0 12rpx 48rpx rgba(0,0,0,0.10);
+  --shadow-primary: 0 8rpx 28rpx rgba(7,193,96,0.28);
+  --shadow-card:    0 2rpx 16rpx rgba(26,26,46,0.06);
+
+  /* ── 间距：8px 倍数原则 ── */
+  --space-1: 8rpx;
+  --space-2: 16rpx;
+  --space-3: 24rpx;
+  --space-4: 32rpx;
+  --space-5: 40rpx;
+  --space-6: 48rpx;
+  --space-8: 64rpx;
 
   font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
   background-color: var(--color-bg);
   color: var(--color-text-primary);
-  font-size: 26rpx;
+  font-size: 28rpx;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ============ 公共卡片 ============ */
+/* ══════════════════════════════════
+   卡片 · 新拟态感大圆角卡片
+══════════════════════════════════ */
 .card {
-  background: var(--color-white);
+  background: var(--color-surface);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
-.card-padding {
-  padding: 28rpx;
+.card-padding { padding: var(--space-4); }
+
+.card-sm {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
 }
 
-/* ============ 公共按钮 ============ */
+/* ══════════════════════════════════
+   按钮
+══════════════════════════════════ */
 .btn {
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-full);
-  font-size: 28rpx;
-  font-weight: 500;
-  padding: 0 40rpx;
-  height: 80rpx;
-  transition: all 0.2s;
+  font-size: 30rpx;
+  font-weight: 600;
+  padding: 0 var(--space-5);
+  height: 88rpx;
+  letter-spacing: 1rpx;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
-
-.btn::after { border: none; }
 
 .btn::after { border: none; }
 
@@ -76,8 +104,8 @@ page {
 }
 
 .btn-primary:active {
-  transform: scale(0.97);
-  box-shadow: 0 4rpx 12rpx rgba(255,107,53,0.25);
+  transform: scale(0.96);
+  box-shadow: 0 4rpx 12rpx rgba(7,193,96,0.20);
 }
 
 .btn-outline {
@@ -87,8 +115,14 @@ page {
 }
 
 .btn-ghost {
-  background: var(--color-bg);
+  background: var(--color-surface-2);
   color: var(--color-text-secondary);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #07C160 0%, #0FD970 100%);
+  color: #FFFFFF;
+  box-shadow: 0 8rpx 24rpx rgba(7,193,96,0.28);
 }
 
 .btn-danger {
@@ -97,83 +131,86 @@ page {
   border: 2rpx solid var(--color-danger);
 }
 
-.btn-full {
-  width: 100%;
+.btn-full { width: 100%; }
+
+.btn-disabled {
+  opacity: 0.5;
 }
 
-/* ============ 标签胶囊 ============ */
+/* ══════════════════════════════════
+   标签胶囊
+══════════════════════════════════ */
 .tag {
   display: inline-flex;
   align-items: center;
-  padding: 4rpx 16rpx;
+  padding: 6rpx 18rpx;
   border-radius: var(--radius-full);
   font-size: 22rpx;
   font-weight: 500;
 }
 
-.tag-primary {
-  background: var(--color-primary-pale);
-  color: var(--color-primary);
-}
+.tag-primary  { background: var(--color-primary-pale); color: var(--color-primary); }
+.tag-success  { background: rgba(7,193,96,0.12);       color: var(--color-success); }
+.tag-danger   { background: rgba(255,59,48,0.10);      color: var(--color-danger);  }
+.tag-warning  { background: rgba(255,149,0,0.12);      color: var(--color-warning); }
+.tag-gray     { background: var(--color-surface-2);    color: var(--color-text-tertiary); }
 
-.tag-success {
-  background: rgba(52,199,89,0.12);
-  color: var(--color-success);
-}
-
-.tag-danger {
-  background: rgba(255,59,48,0.10);
-  color: var(--color-danger);
-}
-
-.tag-warning {
-  background: rgba(255,149,0,0.12);
-  color: var(--color-warning);
-}
-
-.tag-gray {
-  background: var(--color-bg);
-  color: var(--color-text-tertiary);
-}
-
-/* ============ 分割线 ============ */
+/* ══════════════════════════════════
+   分割线
+══════════════════════════════════ */
 .divider {
   height: 1rpx;
   background: var(--color-border);
-  margin: 0;
 }
 
-/* ============ 空状态 ============ */
+/* ══════════════════════════════════
+   空状态
+══════════════════════════════════ */
 .empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 100rpx 40rpx;
+  padding: 120rpx var(--space-5);
   color: var(--color-text-tertiary);
-  font-size: 26rpx;
 }
 
 .empty-icon {
-  font-size: 100rpx;
-  margin-bottom: 24rpx;
-  opacity: 0.4;
+  font-size: 120rpx;
+  margin-bottom: var(--space-3);
+  opacity: 0.35;
 }
 
-/* ============ 加载状态 ============ */
+.empty-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-1);
+}
+
+.empty-desc {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+  margin-bottom: var(--space-4);
+}
+
+/* ══════════════════════════════════
+   加载 & 安全区
+══════════════════════════════════ */
 .loading-wrap {
   display: flex;
   justify-content: center;
-  padding: 40rpx;
+  padding: var(--space-5);
 }
 
-/* ============ 安全区底部 ============ */
 .safe-bottom {
   height: env(safe-area-inset-bottom);
   min-height: 20rpx;
 }
 
-/* ============ 文本截断 ============ */
+/* ══════════════════════════════════
+   文本工具
+══════════════════════════════════ */
 .text-clamp1 {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -187,10 +224,14 @@ page {
   overflow: hidden;
 }
 
-/* ============ 通用间距 ============ */
+/* ══════════════════════════════════
+   通用间距
+══════════════════════════════════ */
+.mt-8  { margin-top: 8rpx; }
 .mt-16 { margin-top: 16rpx; }
 .mt-24 { margin-top: 24rpx; }
 .mt-32 { margin-top: 32rpx; }
+.mb-8  { margin-bottom: 8rpx; }
 .mb-16 { margin-bottom: 16rpx; }
 .mb-24 { margin-bottom: 24rpx; }
 .px-32 { padding-left: 32rpx; padding-right: 32rpx; }

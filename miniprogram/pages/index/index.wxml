@@ -48,11 +48,17 @@
       </view>
     </view>
 
-    <!-- 空状态 -->
-    <view class="empty-state" wx:elif="{{!loading && activities.length === 0}}">
-      <text class="empty-icon">🎈</text>
-      <text>{{emptyText}}</text>
-      <button class="btn btn-primary mt-24" style="width:240rpx" catchtap="onCreateTap">
+    <!-- 空状态 — 引导型插画 -->
+    <view class="empty-guide" wx:elif="{{!loading && activities.length === 0}}">
+      <view class="empty-ball-wrap">
+        <view class="empty-ball">
+          <text class="empty-ball__emoji">🎯</text>
+        </view>
+        <view class="empty-ball__shadow"></view>
+      </view>
+      <text class="empty-guide__title">还没有活动</text>
+      <text class="empty-guide__desc">来发起第一个，约上好友一起玩 ✨</text>
+      <button class="btn btn-primary mt-24 empty-guide__btn" catchtap="onCreateTap">
         发起第一个活动
       </button>
     </view>
