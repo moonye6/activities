@@ -2,30 +2,43 @@
 App({
   globalData: {
     userInfo: null,
-    // 云开发环境ID，开通云开发后填写
-    cloudEnvId: 'YOUR_CLOUD_ENV_ID'
+    cloudEnvId: 'cloud1-2grqmoxcf951a5eb'
   },
 
   onLaunch() {
-    // MVP 阶段使用 mock 用户登录
-    // 生产环境替换为 wx.login + 云函数获取 openid
-    this.globalData.userInfo = {
-      _id: 'user_001',
-      nickName: '活动达人',
-      avatarUrl: '',
-      phone: '',
-      tags: ['同事', '吃货', '运动爱好者'],
-      createdAt: 1740000000000
+    if (!wx.cloud) {
+      console.error('请使用 2.2.3 或以上的基础库以使用云能力')
+      return
     }
+    wx.cloud.init({
+      env: this.globalData.cloudEnvId,
+      traceUser: true
+    })
+    this._initUser()
+  },
 
-    // 生产环境云开发初始化（取消注释后使用）
-    // if (!wx.cloud) {
-    //   console.error('请使用 2.2.3 或以上的基础库以使用云能力')
-    // } else {
-    //   wx.cloud.init({
-    //     env: this.globalData.cloudEnvId,
-    //     traceUser: true,
-    //   })
-    // }
+  _initUser() {
+    const db = wx.cloud.database()
+    const users = db.collection('juwu_users')
+    // 权限为"仅创建者可读写"时，直接 get() 只会返回当前用户自己的记录
+    users.limit(1).get()
+      .then(({ data }) => {
+        if (data.length > 0) {
+          this.globalData.userInfo = data[0]
+        } else {
+          const newUser = {
+            nickName: '新用户',
+            avatarUrl: '',
+            tags: [],
+            createdAt: Date.now()
+          }
+          users.add({ data: newUser }).then(({ _id }) => {
+            this.globalData.userInfo = { _id, ...newUser }
+          })
+        }
+      })
+      .catch(err => {
+        console.error('initUser fail', err)
+      })
   }
 })

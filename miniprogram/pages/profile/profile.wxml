@@ -4,10 +4,43 @@
   <view class="profile-header">
     <view class="header-bg"></view>
     <view class="header-content">
-      <view class="profile-avatar" style="background:{{avatarColor}}">
-        <text class="profile-avatar__text">{{avatarText}}</text>
+      <!-- 头像 + 昵称一步授权区 -->
+      <view wx:if="{{!userInfo.avatarUrl || !userInfo.nickName || userInfo.nickName === '新用户'}}" class="auth-wrap">
+        <!-- 隐藏的 nickname input，微信选头像时会自动填入昵称 -->
+        <input
+          class="nick-input-hidden"
+          type="nickname"
+          id="nicknameInput"
+          bindinput="onNickInput"
+        />
+        <!-- 头像选择按钮，点一次完成头像+昵称授权 -->
+        <button
+          class="profile-avatar-btn"
+          open-type="chooseAvatar"
+          bindchooseavatar="onChooseAvatar"
+          style="width:120rpx;height:120rpx;min-width:120rpx;border-radius:60rpx;background:{{avatarColor}};padding:0;"
+        >
+          <image wx:if="{{userInfo.avatarUrl}}" class="profile-avatar-img" src="{{userInfo.avatarUrl}}" mode="aspectFill"/>
+          <text wx:else class="profile-avatar__text">{{avatarText}}</text>
+        </button>
+        <view class="avatar-hint">点击头像一键授权</view>
       </view>
-      <view class="profile-nickname">{{userInfo.nickName || '未登录'}}</view>
+
+      <!-- 已完成授权：展示头像 + 昵称 -->
+      <view wx:else class="auth-done-wrap">
+        <button
+          class="profile-avatar-btn"
+          open-type="chooseAvatar"
+          bindchooseavatar="onChooseAvatar"
+          style="width:120rpx;height:120rpx;min-width:120rpx;border-radius:60rpx;padding:0;"
+        >
+          <image class="profile-avatar-img" src="{{userInfo.avatarUrl}}" mode="aspectFill"/>
+        </button>
+        <view class="profile-nickname" bindtap="onEditNick">
+          {{userInfo.nickName}}<text class="nick-edit-icon"> ✎</text>
+        </view>
+      </view>
+
       <view class="profile-since">加入于 {{joinedAt}}</view>
     </view>
   </view>

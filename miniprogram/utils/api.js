@@ -1,188 +1,233 @@
-// utils/api.js — 数据抽象层
-// MVP 阶段调用 mock.js，切换云开发只需修改此文件
+// utils/api.js — 数据抽象层（云开发版）
+// 活动数据存储在云数据库 juwu 集合中
+// 用户数据存储在 juwu_users 集合中
 
 const mock = require('./mock')
 
-// ===================================================
-// 切换开关：false = mock数据，true = 微信云开发
-// 开通云开发后将此值改为 true
-// ===================================================
-const USE_CLOUD = false
+// 获取数据库引用
+function db() {
+  return wx.cloud.database()
+}
 
-// 模拟网络延迟（mock 模式）
-const delay = (ms = 300) => new Promise(resolve => setTimeout(resolve, ms))
+// juwu 活动集合
+function col() {
+  return db().collection('juwu')
+}
 
-// 生成唯一 ID（mock 模式使用）
-let _idCounter = 100
-const genId = (prefix) => `${prefix}_${Date.now()}_${++_idCounter}`
-
-// ===================================================
-// 内存存储（mock 模式，运行时可读写）
-// ===================================================
-let _activities = [...mock.ACTIVITIES]
-let _users = [...mock.USERS]
+// juwu_users 用户集合
+function userCol() {
+  return db().collection('juwu_users')
+}
 
 // ===================================================
 // 用户相关
 // ===================================================
 
 /**
- * 获取当前用户信息
- * @returns {Promise<Object>} userInfo
+ * 从数据库重新获取当前用户最新信息并更新 globalData
+ */
+async function refreshCurrentUser() {
+  const { data } = await userCol().limit(1).get()
+  console.log('[refreshCurrentUser] data:', JSON.stringify(data))
+  if (data.length > 0) {
+    const app = getApp()
+    app.globalData.userInfo = data[0]
+    return data[0]
+  }
+  return getApp().globalData.userInfo
+}
+
+/**
+ * 获取当前用户信息（等待 app.js 初始化完成）
  */
 async function getCurrentUser() {
-  if (USE_CLOUD) {
-    // 云开发版本（待接入）
-    // const { result } = await wx.cloud.callFunction({ name: 'activityService', data: { action: 'getCurrentUser' } })
-    // return result.data
-  }
-  await delay(100)
-  const app = getApp()
-  return app.globalData.userInfo
+  return new Promise((resolve, reject) => {
+    const app = getApp()
+    if (app.globalData.userInfo) {
+      resolve(app.globalData.userInfo)
+      return
+    }
+    let waited = 0
+    const timer = setInterval(() => {
+      if (app.globalData.userInfo) {
+        clearInterval(timer)
+        resolve(app.globalData.userInfo)
+      } else if (waited >= 8000) {
+        clearInterval(timer)
+        reject(new Error('获取用户信息超时，请检查网络或云开发环境配置'))
+      }
+      waited += 100
+    }, 100)
+  })
 }
 
 /**
  * 根据 ID 获取用户
- * @param {string} userId
- * @returns {Promise<Object>}
+ * juwu_users 权限为"仅创建者可读写"时只能读自己，
+ * 读他人会报权限错误，降级返回占位对象。
  */
 async function getUserById(userId) {
-  if (USE_CLOUD) {
-    // const db = wx.cloud.database()
-    // return await db.collection('users').doc(userId).get().then(r => r.data)
+  try {
+    const { data } = await userCol().doc(userId).get()
+    return data || null
+  } catch (e) {
+    // 无权限读取他人记录，返回占位
+    return { _id: userId, nickName: '用户' + userId.slice(-4) }
   }
-  await delay(50)
-  return _users.find(u => u._id === userId) || null
 }
 
 /**
- * 批量获取用户
- * @param {string[]} userIds
- * @returns {Promise<Object[]>}
+ * 批量获取用户（权限不足时逐条降级）
  */
 async function getUsersByIds(userIds) {
-  if (USE_CLOUD) {
-    // const db = wx.cloud.database()
-    // const { data } = await db.collection('users').where({ _id: db.command.in(userIds) }).get()
-    // return data
+  if (!userIds || userIds.length === 0) return []
+  // 先尝试批量查询（需要集合权限为"所有用户可读"）
+  try {
+    const { data } = await userCol()
+      .where({ _id: db().command.in(userIds) })
+      .get()
+    // 补全查询不到的用户（权限或不存在）
+    const found = new Set(data.map(u => u._id))
+    const fallback = userIds
+      .filter(id => !found.has(id))
+      .map(id => ({ _id: id, nickName: '用户' + id.slice(-4) }))
+    return [...data, ...fallback]
+  } catch (e) {
+    // 批量查询失败，逐条降级
+    return userIds.map(id => ({ _id: id, nickName: '用户' + id.slice(-4) }))
   }
-  await delay(100)
-  return _users.filter(u => userIds.includes(u._id))
 }
 
 // ===================================================
-// 活动相关
+// 活动相关（juwu 集合）
 // ===================================================
 
 /**
  * 获取活动列表
- * @param {Object} options - { tab: 'all'|'mine'|'joined', currentUserId }
- * @returns {Promise<Object[]>}
+ * juwu 集合权限需设为"所有用户可读，仅创建者可写"
  */
 async function getActivities({ tab = 'all', currentUserId } = {}) {
-  if (USE_CLOUD) {
-    // const db = wx.cloud.database()
-    // const { data } = await db.collection('activities').orderBy('createdAt', 'desc').get()
-    // return data
-  }
-  await delay(300)
-  let list = [..._activities].sort((a, b) => b.createdAt - a.createdAt)
+  let query
+
   if (tab === 'mine') {
-    list = list.filter(a => a.creatorId === currentUserId)
-  } else if (tab === 'joined') {
-    list = list.filter(a =>
+    query = col()
+      .where({ creatorId: currentUserId })
+      .orderBy('createdAt', 'desc')
+      .limit(50)
+  } else {
+    query = col()
+      .orderBy('createdAt', 'desc')
+      .limit(50)
+  }
+
+  const { data } = await query.get()
+
+  if (tab === 'joined') {
+    return data.filter(a =>
       a.creatorId !== currentUserId &&
+      Array.isArray(a.rsvps) &&
       a.rsvps.some(r => r.userId === currentUserId && r.status === 'yes')
     )
   }
-  return list
+
+  return data
 }
 
 /**
  * 根据 ID 获取活动详情
- * @param {string} actId
- * @returns {Promise<Object>}
  */
 async function getActivityById(actId) {
-  if (USE_CLOUD) {
-    // const db = wx.cloud.database()
-    // return await db.collection('activities').doc(actId).get().then(r => r.data)
+  try {
+    const { data } = await col().doc(actId).get()
+    return data || null
+  } catch (e) {
+    console.error('getActivityById fail', e)
+    return null
   }
-  await delay(200)
-  return _activities.find(a => a._id === actId) || null
 }
 
 /**
  * 创建活动
- * @param {Object} data - 活动数据（不含 _id/createdAt/status/rsvps）
- * @returns {Promise<Object>} 创建的活动
  */
 async function createActivity(data) {
-  if (USE_CLOUD) {
-    // const db = wx.cloud.database()
-    // const { _id } = await db.collection('activities').add({ data: { ...data, status: 'recruiting', rsvps: [], createdAt: Date.now() } })
-    // return await getActivityById(_id)
-  }
-  await delay(400)
-  const newActivity = {
-    _id: genId('act'),
+  const newData = {
     ...data,
     status: 'recruiting',
     rsvps: [{ userId: data.creatorId, status: 'yes' }],
     createdAt: Date.now()
   }
-  _activities.unshift(newActivity)
-  return newActivity
+  const { _id } = await col().add({ data: newData })
+  return { _id, ...newData }
 }
 
 /**
- * 更新活动 RSVP 状态
- * @param {string} actId
- * @param {string} userId
- * @param {'yes'|'maybe'|'no'} rsvpStatus
- * @returns {Promise<Object>} 更新后的活动
+ * 更新 RSVP 状态
+ * 注意：云数据库 update 需要记录的 _openid 与当前用户匹配，
+ * 或集合权限设为"所有用户可读写"。
+ * 推荐将 juwu 集合权限设为"所有用户可读，所有用户可写"用于开发阶段。
  */
 async function updateRsvp(actId, userId, rsvpStatus) {
-  if (USE_CLOUD) {
-    // const { result } = await wx.cloud.callFunction({
-    //   name: 'activityService',
-    //   data: { action: 'updateRsvp', actId, userId, rsvpStatus }
-    // })
-    // return result.data
-  }
-  await delay(300)
-  const act = _activities.find(a => a._id === actId)
+  const act = await getActivityById(actId)
   if (!act) throw new Error('活动不存在')
-  const existIdx = act.rsvps.findIndex(r => r.userId === userId)
-  if (existIdx >= 0) {
-    act.rsvps[existIdx].status = rsvpStatus
+
+  const rsvps = Array.isArray(act.rsvps) ? [...act.rsvps] : []
+  const idx = rsvps.findIndex(r => r.userId === userId)
+  if (idx >= 0) {
+    rsvps[idx] = { userId, status: rsvpStatus }
   } else {
-    act.rsvps.push({ userId, status: rsvpStatus })
+    rsvps.push({ userId, status: rsvpStatus })
   }
-  return { ...act }
+
+  await col().doc(actId).update({ data: { rsvps } })
+  return { ...act, rsvps }
 }
 
 /**
- * 获取用户的活动统计
- * @param {string} userId
- * @returns {Promise<Object>} { created, joined, ended }
+ * 获取用户活动统计
  */
 async function getUserStats(userId) {
-  await delay(150)
-  const created = _activities.filter(a => a.creatorId === userId).length
-  const joined = _activities.filter(a =>
+  const _ = db().command
+  const [createdRes, allJoinedRes, endedCreatedRes, endedJoinedRes] = await Promise.all([
+    // 我发起的
+    col().where({ creatorId: userId }).count(),
+    // 所有活动（用于筛选我参与的，云数据库不支持数组内嵌对象查询，取前100条客户端过滤）
+    col().orderBy('createdAt', 'desc').limit(100).get(),
+    // 我发起且已结束
+    col().where({ creatorId: userId, status: 'ended' }).count(),
+    // 所有已结束活动（筛选我参与的）
+    col().where({ status: 'ended' }).limit(100).get()
+  ])
+
+  const created = createdRes.total
+
+  const joined = allJoinedRes.data.filter(a =>
     a.creatorId !== userId &&
+    Array.isArray(a.rsvps) &&
     a.rsvps.some(r => r.userId === userId && r.status === 'yes')
   ).length
-  const ended = _activities.filter(a =>
-    (a.creatorId === userId || a.rsvps.some(r => r.userId === userId && r.status === 'yes')) &&
-    a.status === 'ended'
+
+  const endedAsCreator = endedCreatedRes.total
+  const endedAsJoined = endedJoinedRes.data.filter(a =>
+    a.creatorId !== userId &&
+    Array.isArray(a.rsvps) &&
+    a.rsvps.some(r => r.userId === userId && r.status === 'yes')
   ).length
+  const ended = endedAsCreator + endedAsJoined
+
   return { created, joined, ended }
 }
 
 /**
- * 获取枚举数据
+ * 更新用户信息（昵称、头像等）
+ * @param {string} userId
+ * @param {Object} fields - 要更新的字段
+ */
+async function updateUserInfo(userId, fields) {
+  return await userCol().doc(userId).update({ data: fields })
+}
+
+/**
+ * 获取枚举数据（本地静态，无需云端）
  */
 function getEnums() {
   return {
@@ -194,6 +239,7 @@ function getEnums() {
 
 module.exports = {
   getCurrentUser,
+  refreshCurrentUser,
   getUserById,
   getUsersByIds,
   getActivities,
@@ -201,5 +247,6 @@ module.exports = {
   createActivity,
   updateRsvp,
   getUserStats,
+  updateUserInfo,
   getEnums
 }

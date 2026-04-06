@@ -42,7 +42,9 @@
     "condition": false
   },
   "compileType": "miniprogram",
-  "libVersion": "3.15.1",
+  "cloudfunctionRoot": "cloudfunctions/",
+  "libVersion": "3.7.8",
+  "miniprogramRoot": "miniprogram/",
   "srcMiniprogramRoot": "miniprogram/",
   "condition": {},
   "packOptions": {

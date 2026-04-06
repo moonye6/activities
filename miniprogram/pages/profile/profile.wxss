@@ -46,11 +46,137 @@
   font-weight: 700;
 }
 
+/* 头像按钮（button 重置） */
+.profile-avatar-btn {
+  width: 120rpx !important;
+  height: 120rpx !important;
+  min-width: 120rpx !important;
+  max-width: 120rpx !important;
+  min-height: 0;
+  border-radius: 60rpx !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 6rpx solid rgba(255,255,255,0.8) !important;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.15);
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1;
+  box-sizing: border-box !important;
+  overflow: hidden;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.profile-avatar-btn::after {
+  display: none !important;
+}
+
+.profile-avatar-btn--img {
+  background: #eee;
+}
+
+.profile-avatar-img {
+  width: 120rpx;
+  height: 120rpx;
+  display: block;
+}
+
+.avatar-hint {
+  font-size: 20rpx;
+  color: rgba(255,255,255,0.85);
+  margin-top: -6rpx;
+}
+
+.profile-avatar-edit-badge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.45);
+  color: #fff;
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 一步授权区 */
+.auth-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.auth-done-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+/* 隐藏的 nickname input，仅用于接收微信自动填入的昵称 */
+.nick-input-hidden {
+  width: 0;
+  height: 0;
+  position: absolute;
+  opacity: 0;
+}
+
+.nick-auth-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.nick-edit-icon {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+.nick-edit-wrap {
+  background: rgba(255,255,255,0.2);
+  border-radius: 12rpx;
+  padding: 4rpx 20rpx;
+}
+
+.nick-input {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  width: 300rpx;
+  height: 64rpx;
+  background: rgba(255,255,255,0.2);
+  border-radius: 12rpx;
+  padding: 0 16rpx;
+}
+
+.nick-confirm-btn {
+  font-size: 24rpx;
+  color: #FF6B35;
+  background: white;
+  border-radius: 30rpx;
+  padding: 0 32rpx;
+  height: 52rpx;
+  line-height: 52rpx;
+  font-weight: 600;
+}
+
+.nick-confirm-btn::after { border: none; }
+
 .profile-nickname {
   font-size: 36rpx;
   font-weight: 700;
   color: white;
   text-shadow: 0 2rpx 6rpx rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
 }
 
 .profile-since {
