@@ -1,7 +1,7 @@
 {
   "description": "项目配置 - 微信小程序开发者工具",
   "projectname": "activities",
-  "appid": "YOUR_APPID",
+  "appid": "wxe4dd8e2c84d366d7",
   "setting": {
     "urlCheck": false,
     "es6": true,
@@ -38,19 +38,19 @@
     "disableUseStrict": false,
     "minifyWXML": false,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false
+    "useCompilerPlugins": false,
+    "condition": false
   },
   "compileType": "miniprogram",
-  "libVersion": "3.0.0",
+  "libVersion": "3.15.1",
   "srcMiniprogramRoot": "miniprogram/",
-  "debugOptions": {
-    "hidedInDevtools": []
+  "condition": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
   },
-  "scripts": {},
-  "staticServerOptions": {
-    "baseURL": "",
-    "servePath": ""
-  },
-  "isGameTourist": false,
-  "condition": {}
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  }
 }
