@@ -52,9 +52,9 @@
     <view class="empty-state" wx:elif="{{!loading && activities.length === 0}}">
       <text class="empty-icon">🎈</text>
       <text>{{emptyText}}</text>
-      <view class="btn btn-primary mt-24" style="width:240rpx" bindtap="onCreateTap">
+      <button class="btn btn-primary mt-24" style="width:240rpx" catchtap="onCreateTap">
         发起第一个活动
-      </view>
+      </button>
     </view>
 
     <!-- 活动卡片流 -->

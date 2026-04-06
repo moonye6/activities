@@ -67,6 +67,8 @@ page {
 
 .btn::after { border: none; }
 
+.btn::after { border: none; }
+
 .btn-primary {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
   color: #FFFFFF;

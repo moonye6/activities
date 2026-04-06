@@ -56,7 +56,6 @@ Page({
     const timeRange = genTimeRange()
     this._dateRange = []
 
-    // 重建日期值列表（用于最终取值）
     const now = new Date()
     for (let i = 0; i < 30; i++) {
       const d = new Date(now.getTime() + i * 24 * 60 * 60 * 1000)
@@ -68,13 +67,24 @@ Page({
     }
 
     this.setData({
+      // 每次进入重置表单
+      form: {
+        title: '',
+        type: '',
+        time: '',
+        location: '',
+        visibility: 'friends',
+        tags: [],
+        maxCount: 6
+      },
+      typeInfo: {},
+      customTags: [],
       visibilityOptions,
       systemTags,
       timeRange,
-      timePickerVal: [0, 19, 0]  // 默认今天 19:00
+      timePickerVal: [0, 19, 0]
     })
 
-    // 设置默认时间
     this._updateTimeDisplay(0, 19, 0)
   },
 
