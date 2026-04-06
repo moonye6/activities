@@ -17,21 +17,15 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "活动",
-        "iconPath": "assets/icons/home.png",
-        "selectedIconPath": "assets/icons/home-active.png"
+        "text": "活动"
       },
       {
         "pagePath": "pages/create/create",
-        "text": "发起",
-        "iconPath": "assets/icons/add.png",
-        "selectedIconPath": "assets/icons/add-active.png"
+        "text": "发起"
       },
       {
         "pagePath": "pages/profile/profile",
-        "text": "我的",
-        "iconPath": "assets/icons/profile.png",
-        "selectedIconPath": "assets/icons/profile-active.png"
+        "text": "我的"
       }
     ]
   },
