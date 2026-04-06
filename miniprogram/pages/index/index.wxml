@@ -13,6 +13,21 @@
     </view>
   </view>
 
+  <!-- 漂流瓶入口横幅 -->
+  <view class="drift-banner" bindtap="onDriftTap">
+    <view class="drift-banner__left">
+      <text class="drift-banner__icon">🍶</text>
+      <view>
+        <text class="drift-banner__title">漂流瓶</text>
+        <text class="drift-banner__sub">与陌生人聊聊活动故事</text>
+      </view>
+    </view>
+    <view class="drift-banner__right">
+      <text class="drift-banner__quota">今日捞瓶 {{driftFishRemain}}/1</text>
+      <text class="drift-banner__arrow">›</text>
+    </view>
+  </view>
+
   <!-- 分类 Tab -->
   <view class="tab-bar">
     <view

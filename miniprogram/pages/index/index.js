@@ -24,13 +24,17 @@ Page({
     loadingMore: false,
     noMore: false,
     emptyText: EMPTY_TEXT.all,
-    currentUserId: ''
+    currentUserId: '',
+    driftFishRemain: 1
   },
 
   async onLoad() {
     const userInfo = await api.getCurrentUser()
     this.setData({ currentUserId: userInfo._id })
-    await this._loadActivities()
+    await Promise.all([
+      this._loadActivities(),
+      this._loadDriftQuota(userInfo._id)
+    ])
   },
 
   onShow() {
@@ -39,6 +43,17 @@ Page({
       this._needRefresh = false
       this._loadActivities()
     }
+    // 每次显示时刷新漂流瓶配额
+    if (this.data.currentUserId) {
+      this._loadDriftQuota(this.data.currentUserId)
+    }
+  },
+
+  async _loadDriftQuota(userId) {
+    try {
+      const quota = await api.getDriftQuotaStatus(userId)
+      this.setData({ driftFishRemain: quota.fishRemain })
+    } catch (_) {}
   },
 
   async _loadActivities() {
@@ -111,5 +126,9 @@ Page({
 
   onSearch() {
     wx.showToast({ title: '搜索功能开发中', icon: 'none' })
+  },
+
+  onDriftTap() {
+    wx.navigateTo({ url: '/pages/drift/index' })
   }
 })

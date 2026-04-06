@@ -1,0 +1,61 @@
+<!-- pages/drift/throw.wxml — 丢漂流瓶 -->
+<view class="page">
+  <view class="form-card card card-padding">
+    <view class="form-tip">
+      <text class="form-tip__icon">🍶</text>
+      <text class="form-tip__text">写下你想分享的活动故事，一天只能丢一次哦</text>
+    </view>
+
+    <!-- 内容输入 -->
+    <view class="field">
+      <textarea
+        class="field__textarea"
+        placeholder="分享你对某个活动的期待、有趣的故事，或者想约到一起玩的想法..."
+        placeholder-class="field__placeholder"
+        value="{{content}}"
+        bindinput="onContentInput"
+        maxlength="200"
+        auto-height
+      />
+      <view class="field__counter">
+        <text class="{{content.length > 180 ? 'counter--warn' : 'counter--normal'}}">
+          {{content.length}}/200
+        </text>
+      </view>
+    </view>
+
+    <!-- 标签选择 -->
+    <view class="field-label">选择话题标签（可选）</view>
+    <view class="tag-row">
+      <view
+        wx:for="{{allTags}}"
+        wx:key="*this"
+        class="tag-chip {{selectedTags.includes(item) ? 'tag-chip--active' : ''}}"
+        bindtap="onToggleTag"
+        data-tag="{{item}}"
+      >
+        {{item}}
+      </view>
+    </view>
+
+    <!-- 敏感词警告 -->
+    <view class="warn-tip" wx:if="{{sensitiveWarning}}">
+      <text>⚠️ 内容包含违规词，请修改后提交</text>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-area">
+    <button
+      class="btn btn-primary btn-full"
+      bindtap="onSubmit"
+      loading="{{submitting}}"
+      disabled="{{submitting || !content.trim()}}"
+    >
+      🌊 丢出漂流瓶
+    </button>
+    <text class="submit-hint">内容会被随机或智能匹配推送给感兴趣的用户</text>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

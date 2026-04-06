@@ -1,0 +1,108 @@
+<!-- pages/drift/index.wxml — 漂流瓶主页 -->
+<view class="page">
+  <!-- 顶部配额提示 -->
+  <view class="quota-bar">
+    <view class="quota-item">
+      <text class="quota-label">今日丢瓶</text>
+      <text class="quota-val {{quota.canThrow ? 'quota-val--ok' : 'quota-val--used'}}">
+        {{quota.throwRemain}}/1
+      </text>
+    </view>
+    <view class="quota-divider"></view>
+    <view class="quota-item">
+      <text class="quota-label">今日捞瓶</text>
+      <text class="quota-val {{quota.canFish ? 'quota-val--ok' : 'quota-val--used'}}">
+        {{quota.fishRemain}}/1
+      </text>
+    </view>
+  </view>
+
+  <!-- 主操作区 -->
+  <view class="hero">
+    <view class="ocean-wrap">
+      <view class="ocean-bottle {{waving ? 'ocean-bottle--wave' : ''}}">🍶</view>
+      <view class="ocean-waves">
+        <view class="wave wave1"></view>
+        <view class="wave wave2"></view>
+      </view>
+    </view>
+    <text class="hero-title">漂流瓶</text>
+    <text class="hero-desc">写下心里话，与陌生人分享活动故事</text>
+
+    <view class="action-row">
+      <button
+        class="btn btn-primary action-btn {{!quota.canThrow ? 'btn-disabled' : ''}}"
+        bindtap="onThrow"
+        disabled="{{!quota.canThrow}}"
+      >
+        🌊 丢出漂流瓶
+      </button>
+      <button
+        class="btn btn-outline action-btn {{!quota.canFish ? 'btn-disabled' : ''}}"
+        bindtap="onFish"
+        disabled="{{!quota.canFish}}"
+        loading="{{fishing}}"
+      >
+        🎣 捞一个
+      </button>
+    </view>
+  </view>
+
+  <!-- 我的漂流瓶历史 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">我丢出的瓶子</text>
+    </view>
+    <view wx:if="{{loadingHistory}}" class="loading-wrap">
+      <text class="loading-text">加载中...</text>
+    </view>
+    <view wx:elif="{{thrown.length === 0}}" class="empty-mini">
+      <text class="empty-mini__text">还没有丢过漂流瓶</text>
+    </view>
+    <view wx:else class="bottle-list">
+      <view
+        wx:for="{{thrown}}"
+        wx:key="_id"
+        class="bottle-card"
+        bindtap="onBottleCardTap"
+        data-bottle="{{item}}"
+      >
+        <view class="bottle-card__header">
+          <text class="bottle-card__status {{item.status === 'matched' ? 'status--matched' : item.status === 'ended' ? 'status--ended' : 'status--waiting'}}">
+            {{item.status === 'waiting' ? '⏳ 等待中' : item.status === 'matched' ? '💬 已匹配' : '✅ 已结束'}}
+          </text>
+          <text class="bottle-card__tags">{{item.tags.join(' · ')}}</text>
+        </view>
+        <text class="bottle-card__content text-clamp2">{{item.content}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">我捞到的瓶子</text>
+    </view>
+    <view wx:if="{{fished.length === 0 && !loadingHistory}}" class="empty-mini">
+      <text class="empty-mini__text">还没有捞过漂流瓶</text>
+    </view>
+    <view wx:else class="bottle-list">
+      <view
+        wx:for="{{fished}}"
+        wx:key="_id"
+        class="bottle-card"
+        bindtap="onBottleCardTap"
+        data-bottle="{{item}}"
+      >
+        <view class="bottle-card__header">
+          <text class="bottle-card__status {{item.status === 'matched' ? 'status--matched' : 'status--ended'}}">
+            {{item.status === 'ended' ? '✅ 已结束' : '💬 聊天中'}}
+          </text>
+          <text class="bottle-card__tags">{{item.tags.join(' · ')}}</text>
+        </view>
+        <text class="bottle-card__content text-clamp2">{{item.content}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

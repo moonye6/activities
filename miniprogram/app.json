@@ -4,7 +4,10 @@
     "pages/create/create",
     "pages/detail/detail",
     "pages/profile/profile",
-    "pages/activity-type/activity-type"
+    "pages/activity-type/activity-type",
+    "pages/drift/index",
+    "pages/drift/throw",
+    "pages/drift/chat"
   ],
   "tabBar": {
     "color": "#AAAAAA",

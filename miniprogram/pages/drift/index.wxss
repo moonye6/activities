@@ -1,0 +1,204 @@
+/* pages/drift/index.wxss */
+
+.page {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+/* 配额提示条 */
+.quota-bar {
+  display: flex;
+  align-items: center;
+  background: var(--color-surface);
+  border-bottom: 1rpx solid var(--color-border);
+  padding: 20rpx 48rpx;
+}
+
+.quota-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.quota-label {
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+}
+
+.quota-val {
+  font-size: 36rpx;
+  font-weight: 700;
+}
+
+.quota-val--ok   { color: var(--color-primary); }
+.quota-val--used { color: var(--color-text-tertiary); }
+
+.quota-divider {
+  width: 1rpx;
+  height: 48rpx;
+  background: var(--color-border);
+  margin: 0 32rpx;
+}
+
+/* Hero 区 */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56rpx 48rpx 48rpx;
+  background: linear-gradient(180deg, var(--color-primary-bg) 0%, var(--color-bg) 100%);
+}
+
+.ocean-wrap {
+  position: relative;
+  width: 200rpx;
+  height: 180rpx;
+  margin-bottom: 32rpx;
+}
+
+.ocean-bottle {
+  font-size: 100rpx;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  transition: transform 0.3s ease;
+}
+
+.ocean-bottle--wave {
+  animation: bottle-sway 1s ease-in-out;
+}
+
+@keyframes bottle-sway {
+  0%   { transform: translateX(-50%) rotate(0deg); }
+  25%  { transform: translateX(-50%) rotate(12deg); }
+  75%  { transform: translateX(-50%) rotate(-12deg); }
+  100% { transform: translateX(-50%) rotate(0deg); }
+}
+
+.ocean-waves {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48rpx;
+  overflow: hidden;
+}
+
+.wave {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background: rgba(7,193,96,0.15);
+  border-radius: 50%;
+  animation: wave-move 3s linear infinite;
+}
+
+.wave2 {
+  background: rgba(7,193,96,0.08);
+  animation-duration: 4s;
+  animation-delay: -1s;
+}
+
+@keyframes wave-move {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.hero-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 12rpx;
+}
+
+.hero-desc {
+  font-size: 26rpx;
+  color: var(--color-text-secondary);
+  margin-bottom: 48rpx;
+  text-align: center;
+}
+
+.action-row {
+  display: flex;
+  gap: 24rpx;
+  width: 100%;
+}
+
+.action-btn {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+/* 历史列表区 */
+.section {
+  margin: 24rpx 32rpx 0;
+}
+
+.section-header {
+  padding: 8rpx 0 16rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.empty-mini {
+  padding: 32rpx 0;
+  text-align: center;
+}
+
+.empty-mini__text {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+}
+
+.bottle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.bottle-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 28rpx 32rpx;
+  box-shadow: var(--shadow-card);
+}
+
+.bottle-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.bottle-card__status {
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.status--waiting { color: var(--color-warning); }
+.status--matched { color: var(--color-primary); }
+.status--ended   { color: var(--color-text-tertiary); }
+
+.bottle-card__tags {
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+}
+
+.bottle-card__content {
+  font-size: 28rpx;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+.loading-text {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+}

@@ -1,0 +1,72 @@
+<!-- pages/drift/chat.wxml — 漂流瓶 1v1 聊天 -->
+<view class="page">
+  <!-- 顶部话题栏 -->
+  <view class="topic-bar">
+    <view class="topic-tags">
+      <text wx:for="{{bottle.tags}}" wx:key="*this" class="topic-tag">{{item}}</text>
+      <text wx:if="{{!bottle.tags || bottle.tags.length === 0}}" class="topic-tag">随机话题</text>
+    </view>
+    <view class="topic-actions">
+      <view class="icon-btn" bindtap="onReport">举报</view>
+      <view class="icon-btn icon-btn--danger" bindtap="onEnd">回海</view>
+    </view>
+  </view>
+
+  <!-- 漂流瓶原文 -->
+  <view class="bottle-quote">
+    <text class="bottle-quote__label">🍶 漂流瓶</text>
+    <text class="bottle-quote__text">{{bottle.content}}</text>
+  </view>
+
+  <!-- 消息列表 -->
+  <scroll-view
+    class="msg-scroll"
+    scroll-y
+    scroll-into-view="{{scrollTo}}"
+    scroll-with-animation
+  >
+    <view class="msg-list" id="msg-list">
+      <view wx:if="{{loading}}" class="loading-wrap">
+        <text class="loading-text">加载中...</text>
+      </view>
+      <view wx:elif="{{messages.length === 0}}" class="empty-chat">
+        <text>✨ 对话刚刚开始，打个招呼吧</text>
+      </view>
+      <view
+        wx:for="{{messages}}"
+        wx:key="_id"
+        id="msg-{{item._id}}"
+        class="msg-item {{item.senderId === currentUserId ? 'msg-item--self' : 'msg-item--other'}}"
+      >
+        <view class="msg-bubble">
+          <text class="msg-text">{{item.content}}</text>
+        </view>
+        <text class="msg-time">{{item._timeStr}}</text>
+      </view>
+      <view id="msg-bottom"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部输入区 -->
+  <view class="input-bar {{bottle.status === 'ended' ? 'input-bar--ended' : ''}}">
+    <view wx:if="{{bottle.status === 'ended'}}" class="ended-tip">
+      <text>对话已结束</text>
+    </view>
+    <view wx:else class="input-row">
+      <input
+        class="input-box"
+        placeholder="说点什么..."
+        placeholder-class="input-placeholder"
+        value="{{inputText}}"
+        bindinput="onInput"
+        confirm-type="send"
+        bindconfirm="onSend"
+        adjust-position
+      />
+      <view
+        class="send-btn {{inputText.trim() ? 'send-btn--active' : ''}}"
+        bindtap="onSend"
+      >发送</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,208 @@
+/* pages/drift/chat.wxss */
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg);
+}
+
+/* 话题栏 */
+.topic-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 32rpx;
+  background: var(--color-surface);
+  border-bottom: 1rpx solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.topic-tags {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+}
+
+.topic-tag {
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  background: var(--color-primary-pale);
+  color: var(--color-primary);
+  border-radius: var(--radius-full);
+  font-weight: 500;
+}
+
+.topic-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.icon-btn {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  padding: 8rpx 20rpx;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-full);
+}
+
+.icon-btn--danger {
+  color: var(--color-danger);
+  background: rgba(255,59,48,0.08);
+}
+
+/* 漂流瓶原文 */
+.bottle-quote {
+  margin: 20rpx 32rpx;
+  padding: 20rpx 24rpx;
+  background: var(--color-primary-bg);
+  border-radius: var(--radius-md);
+  border-left: 6rpx solid var(--color-primary);
+  flex-shrink: 0;
+}
+
+.bottle-quote__label {
+  font-size: 22rpx;
+  color: var(--color-primary);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.bottle-quote__text {
+  font-size: 26rpx;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+/* 消息滚动区 */
+.msg-scroll {
+  flex: 1;
+  overflow: hidden;
+}
+
+.msg-list {
+  padding: 16rpx 32rpx 24rpx;
+}
+
+.empty-chat {
+  text-align: center;
+  padding: 60rpx 0;
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+}
+
+.loading-text {
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+}
+
+/* 消息气泡 */
+.msg-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24rpx;
+}
+
+.msg-item--self {
+  align-items: flex-end;
+}
+
+.msg-item--other {
+  align-items: flex-start;
+}
+
+.msg-bubble {
+  max-width: 70%;
+  padding: 20rpx 28rpx;
+  border-radius: var(--radius-lg);
+  word-break: break-all;
+}
+
+.msg-item--self .msg-bubble {
+  background: var(--color-primary);
+  border-bottom-right-radius: var(--radius-xs);
+}
+
+.msg-item--self .msg-text {
+  color: #FFFFFF;
+}
+
+.msg-item--other .msg-bubble {
+  background: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+  border-bottom-left-radius: var(--radius-xs);
+}
+
+.msg-item--other .msg-text {
+  color: var(--color-text-primary);
+}
+
+.msg-text {
+  font-size: 30rpx;
+  line-height: 1.6;
+}
+
+.msg-time {
+  font-size: 20rpx;
+  color: var(--color-text-tertiary);
+  margin-top: 6rpx;
+  padding: 0 8rpx;
+}
+
+/* 输入区 */
+.input-bar {
+  background: var(--color-surface);
+  border-top: 1rpx solid var(--color-border);
+  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
+  flex-shrink: 0;
+}
+
+.input-bar--ended {
+  padding: 24rpx;
+}
+
+.ended-tip {
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--color-text-tertiary);
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.input-box {
+  flex: 1;
+  height: 80rpx;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-full);
+  padding: 0 28rpx;
+  font-size: 28rpx;
+  color: var(--color-text-primary);
+}
+
+.input-placeholder { color: var(--color-text-tertiary); }
+
+.send-btn {
+  min-width: 100rpx;
+  height: 80rpx;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-2);
+  color: var(--color-text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  padding: 0 24rpx;
+}
+
+.send-btn--active {
+  background: var(--color-primary);
+  color: #FFFFFF;
+}

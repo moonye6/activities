@@ -1,0 +1,110 @@
+/* pages/drift/throw.wxss */
+
+.page {
+  min-height: 100vh;
+  background: var(--color-bg);
+  padding: 24rpx 32rpx 0;
+}
+
+.form-card {
+  margin-bottom: 24rpx;
+}
+
+.form-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  background: var(--color-primary-bg);
+  border-radius: var(--radius-md);
+  padding: 20rpx 24rpx;
+  margin-bottom: 32rpx;
+}
+
+.form-tip__icon { font-size: 32rpx; flex-shrink: 0; }
+
+.form-tip__text {
+  font-size: 24rpx;
+  color: var(--color-primary-deep);
+  line-height: 1.6;
+}
+
+/* 文本域 */
+.field {
+  position: relative;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  padding: 24rpx;
+  margin-bottom: 32rpx;
+}
+
+.field__textarea {
+  width: 100%;
+  min-height: 200rpx;
+  font-size: 30rpx;
+  color: var(--color-text-primary);
+  line-height: 1.7;
+}
+
+.field__placeholder { color: var(--color-text-tertiary); }
+
+.field__counter {
+  text-align: right;
+  margin-top: 12rpx;
+}
+
+.counter--normal { font-size: 22rpx; color: var(--color-text-tertiary); }
+.counter--warn   { font-size: 22rpx; color: var(--color-danger); }
+
+/* 标签 */
+.field-label {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 20rpx;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.tag-chip {
+  padding: 10rpx 24rpx;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  font-size: 26rpx;
+  border: 2rpx solid transparent;
+  transition: all 0.15s;
+}
+
+.tag-chip--active {
+  background: var(--color-primary-pale);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* 敏感词警告 */
+.warn-tip {
+  margin-top: 24rpx;
+  padding: 16rpx 20rpx;
+  background: rgba(255,59,48,0.08);
+  border-radius: var(--radius-sm);
+  font-size: 24rpx;
+  color: var(--color-danger);
+}
+
+/* 提交区 */
+.submit-area {
+  padding: 0 0 32rpx;
+}
+
+.submit-hint {
+  display: block;
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+  margin-top: 16rpx;
+}
