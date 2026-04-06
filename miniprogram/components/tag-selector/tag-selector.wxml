@@ -1,0 +1,49 @@
+<!-- components/tag-selector/tag-selector.wxml -->
+<view class="tag-sel">
+  <view class="tag-sel__title" wx:if="{{title}}">{{title}}</view>
+
+  <!-- 系统标签 -->
+  <view class="tag-sel__section" wx:if="{{systemTags.length}}">
+    <view class="tag-sel__section-label">系统标签</view>
+    <view class="tag-sel__list">
+      <view
+        wx:for="{{systemTags}}"
+        wx:key="*this"
+        class="tag-sel__item {{selected.indexOf(item) !== -1 ? 'tag-sel__item--active' : ''}}"
+        bindtap="onToggle"
+        data-tag="{{item}}"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 自定义标签 -->
+  <view class="tag-sel__section" wx:if="{{showCustom}}">
+    <view class="tag-sel__section-label">自定义标签</view>
+    <view class="tag-sel__list">
+      <view
+        wx:for="{{customTags}}"
+        wx:key="*this"
+        class="tag-sel__item {{selected.indexOf(item) !== -1 ? 'tag-sel__item--active' : ''}}"
+        bindtap="onToggle"
+        data-tag="{{item}}"
+      >{{item}}</view>
+
+      <!-- 添加自定义标签输入框 -->
+      <view class="tag-sel__add" wx:if="{{!showInput}}" bindtap="showAddInput">
+        <text>+ 添加</text>
+      </view>
+      <view class="tag-sel__input-wrap" wx:if="{{showInput}}">
+        <input
+          class="tag-sel__input"
+          placeholder="输入标签名"
+          value="{{inputVal}}"
+          bindinput="onInput"
+          bindconfirm="onAddConfirm"
+          focus="{{showInput}}"
+          maxlength="10"
+        />
+        <view class="tag-sel__input-confirm" bindtap="onAddConfirm">确定</view>
+      </view>
+    </view>
+  </view>
+</view>

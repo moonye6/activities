@@ -1,0 +1,198 @@
+/* app.wxss — 全局样式 */
+
+/* ============ CSS 变量 ============ */
+page {
+  --color-primary: #FF6B35;
+  --color-primary-light: #FF8C5A;
+  --color-primary-pale: #FFE8DC;
+  --color-primary-bg: #FFF4EF;
+
+  --color-bg: #F7F7F8;
+  --color-white: #FFFFFF;
+  --color-text-primary: #1A1A1A;
+  --color-text-secondary: #666666;
+  --color-text-tertiary: #AAAAAA;
+  --color-border: #F0F0F0;
+
+  --color-success: #34C759;
+  --color-danger: #FF3B30;
+  --color-warning: #FF9500;
+  --color-info: #007AFF;
+
+  --radius-sm: 8rpx;
+  --radius-md: 16rpx;
+  --radius-lg: 24rpx;
+  --radius-xl: 32rpx;
+  --radius-full: 9999rpx;
+
+  --shadow-sm: 0 2rpx 8rpx rgba(0,0,0,0.06);
+  --shadow-md: 0 4rpx 20rpx rgba(0,0,0,0.10);
+  --shadow-lg: 0 8rpx 40rpx rgba(0,0,0,0.14);
+  --shadow-primary: 0 8rpx 24rpx rgba(255,107,53,0.30);
+
+  font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-size: 26rpx;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============ 重置 ============ */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============ 公共卡片 ============ */
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.card-padding {
+  padding: 28rpx;
+}
+
+/* ============ 公共按钮 ============ */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-size: 28rpx;
+  font-weight: 500;
+  padding: 0 40rpx;
+  height: 80rpx;
+  transition: all 0.2s;
+}
+
+.btn::after { border: none; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  color: #FFFFFF;
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+  box-shadow: 0 4rpx 12rpx rgba(255,107,53,0.25);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2rpx solid var(--color-primary);
+}
+
+.btn-ghost {
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--color-danger);
+  border: 2rpx solid var(--color-danger);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* ============ 标签胶囊 ============ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 16rpx;
+  border-radius: var(--radius-full);
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.tag-primary {
+  background: var(--color-primary-pale);
+  color: var(--color-primary);
+}
+
+.tag-success {
+  background: rgba(52,199,89,0.12);
+  color: var(--color-success);
+}
+
+.tag-danger {
+  background: rgba(255,59,48,0.10);
+  color: var(--color-danger);
+}
+
+.tag-warning {
+  background: rgba(255,149,0,0.12);
+  color: var(--color-warning);
+}
+
+.tag-gray {
+  background: var(--color-bg);
+  color: var(--color-text-tertiary);
+}
+
+/* ============ 分割线 ============ */
+.divider {
+  height: 1rpx;
+  background: var(--color-border);
+  margin: 0;
+}
+
+/* ============ 空状态 ============ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 40rpx;
+  color: var(--color-text-tertiary);
+  font-size: 26rpx;
+}
+
+.empty-icon {
+  font-size: 100rpx;
+  margin-bottom: 24rpx;
+  opacity: 0.4;
+}
+
+/* ============ 加载状态 ============ */
+.loading-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+/* ============ 安全区底部 ============ */
+.safe-bottom {
+  height: env(safe-area-inset-bottom);
+  min-height: 20rpx;
+}
+
+/* ============ 文本截断 ============ */
+.text-clamp1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-clamp2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+/* ============ 通用间距 ============ */
+.mt-16 { margin-top: 16rpx; }
+.mt-24 { margin-top: 24rpx; }
+.mt-32 { margin-top: 32rpx; }
+.mb-16 { margin-bottom: 16rpx; }
+.mb-24 { margin-bottom: 24rpx; }
+.px-32 { padding-left: 32rpx; padding-right: 32rpx; }

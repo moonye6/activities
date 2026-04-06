@@ -1,0 +1,78 @@
+/* components/tag-selector/tag-selector.wxss */
+
+.tag-sel {
+  width: 100%;
+}
+
+.tag-sel__title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 16rpx;
+}
+
+.tag-sel__section {
+  margin-bottom: 20rpx;
+}
+
+.tag-sel__section-label {
+  font-size: 24rpx;
+  color: var(--color-text-tertiary);
+  margin-bottom: 14rpx;
+}
+
+.tag-sel__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+}
+
+.tag-sel__item {
+  padding: 10rpx 24rpx;
+  border-radius: var(--radius-full);
+  font-size: 26rpx;
+  background: var(--color-bg);
+  color: var(--color-text-secondary);
+  border: 2rpx solid var(--color-border);
+  transition: all 0.15s;
+}
+
+.tag-sel__item--active {
+  background: var(--color-primary-pale);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  font-weight: 500;
+}
+
+.tag-sel__add {
+  padding: 10rpx 24rpx;
+  border-radius: var(--radius-full);
+  font-size: 26rpx;
+  color: var(--color-primary);
+  border: 2rpx dashed var(--color-primary);
+  background: transparent;
+}
+
+.tag-sel__input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  background: var(--color-bg);
+  border-radius: var(--radius-full);
+  padding: 6rpx 20rpx 6rpx 24rpx;
+  border: 2rpx solid var(--color-primary);
+}
+
+.tag-sel__input {
+  flex: 1;
+  font-size: 26rpx;
+  color: var(--color-text-primary);
+  min-width: 120rpx;
+}
+
+.tag-sel__input-confirm {
+  font-size: 24rpx;
+  color: var(--color-primary);
+  font-weight: 500;
+  padding: 4rpx 8rpx;
+}

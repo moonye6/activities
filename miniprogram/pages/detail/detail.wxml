@@ -1,0 +1,176 @@
+<!-- pages/detail/detail.wxml — 活动详情 -->
+<view class="page detail-page">
+  <!-- 加载中 -->
+  <view class="loading-wrap" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+  </view>
+
+  <block wx:elif="{{activity}}">
+    <!-- 顶部封面区 -->
+    <view class="detail-cover" style="background:{{coverGradient}}">
+      <view class="cover-overlay"></view>
+      <view class="cover-content">
+        <view class="cover-type-badge">
+          <text class="cover-emoji">{{typeInfo.emoji}}</text>
+          <text class="cover-type-label">{{typeInfo.label}}</text>
+        </view>
+        <view class="cover-title">{{activity.title}}</view>
+        <view class="cover-status tag {{statusInfo.tagClass}}">{{statusInfo.label}}</view>
+      </view>
+    </view>
+
+    <!-- 滚动内容 -->
+    <scroll-view class="detail-scroll" scroll-y>
+      <!-- 信息卡片 -->
+      <view class="detail-card card card-padding">
+        <view class="info-row">
+          <text class="info-icon">🕐</text>
+          <view class="info-content">
+            <text class="info-label">活动时间</text>
+            <text class="info-value">{{timeLabel}}</text>
+          </view>
+        </view>
+        <view class="info-divider"></view>
+
+        <view class="info-row" wx:if="{{activity.location}}">
+          <text class="info-icon">📍</text>
+          <view class="info-content">
+            <text class="info-label">活动地点</text>
+            <text class="info-value">{{activity.location}}</text>
+          </view>
+        </view>
+        <view class="info-divider" wx:if="{{activity.location}}"></view>
+
+        <view class="info-row">
+          <text class="info-icon">👁</text>
+          <view class="info-content">
+            <text class="info-label">可见范围</text>
+            <text class="info-value">{{visibilityLabel}}</text>
+          </view>
+        </view>
+        <view class="info-divider"></view>
+
+        <view class="info-row" wx:if="{{activity.tags.length}}">
+          <text class="info-icon">🏷</text>
+          <view class="info-content">
+            <text class="info-label">标签</text>
+            <view class="info-tags">
+              <text wx:for="{{activity.tags}}" wx:key="*this" class="tag tag-primary">{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 参与者区 -->
+      <view class="section-title">
+        参与情况
+        <text class="section-count">{{rsvpCounts.yes}}/{{activity.maxCount}}人确认</text>
+      </view>
+
+      <view class="participants-card card card-padding">
+        <!-- 参与状态统计 -->
+        <view class="rsvp-stats">
+          <view class="rsvp-stat rsvp-stat--yes">
+            <text class="rsvp-stat__num">{{rsvpCounts.yes}}</text>
+            <text class="rsvp-stat__label">参加</text>
+          </view>
+          <view class="rsvp-stat-divider"></view>
+          <view class="rsvp-stat rsvp-stat--maybe">
+            <text class="rsvp-stat__num">{{rsvpCounts.maybe}}</text>
+            <text class="rsvp-stat__label">暂定</text>
+          </view>
+          <view class="rsvp-stat-divider"></view>
+          <view class="rsvp-stat rsvp-stat--no">
+            <text class="rsvp-stat__num">{{rsvpCounts.no}}</text>
+            <text class="rsvp-stat__label">拒绝</text>
+          </view>
+        </view>
+
+        <!-- 人数进度条 -->
+        <view class="participants-progress">
+          <view class="progress-bar-full">
+            <view
+              class="progress-bar-fill"
+              style="width:{{progressPct}}%;background:{{typeInfo.color}}"
+            ></view>
+          </view>
+          <text class="progress-label">还需 {{activity.maxCount - rsvpCounts.yes}} 人才满员</text>
+        </view>
+
+        <!-- 参与者头像列表 -->
+        <view class="avatar-list" wx:if="{{participants.length}}">
+          <view wx:for="{{participants}}" wx:key="userId" class="avatar-item">
+            <view
+              class="avatar-circle"
+              style="background:{{item.avatarColor}}"
+            >
+              <text class="avatar-text">{{item.avatarText}}</text>
+              <!-- RSVP 状态环 -->
+              <view
+                class="avatar-status"
+                style="background:{{item.statusInfo.color}}"
+              >
+                <text class="avatar-status-icon">{{item.statusInfo.icon}}</text>
+              </view>
+            </view>
+            <text class="avatar-name">{{item.nickName}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 我的操作（非创建者才显示） -->
+      <view class="section-title" wx:if="{{!isCreator}}">我的回复</view>
+      <view class="my-rsvp-card card card-padding" wx:if="{{!isCreator}}">
+        <text class="my-rsvp-hint">你是否参加这个活动？</text>
+        <view class="rsvp-actions">
+          <view
+            class="rsvp-btn rsvp-btn--yes {{myRsvp === 'yes' ? 'rsvp-btn--active-yes' : ''}}"
+            bindtap="onRsvp"
+            data-status="yes"
+          >
+            <text class="rsvp-btn__icon">✓</text>
+            <text class="rsvp-btn__label">参加</text>
+          </view>
+          <view
+            class="rsvp-btn rsvp-btn--maybe {{myRsvp === 'maybe' ? 'rsvp-btn--active-maybe' : ''}}"
+            bindtap="onRsvp"
+            data-status="maybe"
+          >
+            <text class="rsvp-btn__icon">?</text>
+            <text class="rsvp-btn__label">暂定</text>
+          </view>
+          <view
+            class="rsvp-btn rsvp-btn--no {{myRsvp === 'no' ? 'rsvp-btn--active-no' : ''}}"
+            bindtap="onRsvp"
+            data-status="no"
+          >
+            <text class="rsvp-btn__icon">✕</text>
+            <text class="rsvp-btn__label">拒绝</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 创建者信息 -->
+      <view class="creator-card card card-padding">
+        <view class="creator-inner">
+          <view class="creator-avatar" style="background:{{creatorInfo.avatarColor}}">
+            <text>{{creatorInfo.avatarText}}</text>
+          </view>
+          <view class="creator-info">
+            <text class="creator-name">{{creatorInfo.nickName}}</text>
+            <text class="creator-role">发起人</text>
+          </view>
+          <text class="creator-time">{{createdAtLabel}}</text>
+        </view>
+      </view>
+
+      <view style="height:60rpx"></view>
+    </scroll-view>
+  </block>
+
+  <!-- 活动不存在 -->
+  <view class="empty-state" wx:elif="{{!loading}}">
+    <text class="empty-icon">😕</text>
+    <text>活动不存在或已删除</text>
+  </view>
+</view>

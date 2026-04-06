@@ -1,0 +1,23 @@
+<!-- pages/activity-type/activity-type.wxml -->
+<view class="page type-page">
+  <view class="type-grid">
+    <view
+      wx:for="{{activityTypes}}"
+      wx:key="value"
+      class="type-item {{selected === item.value ? 'type-item--active' : ''}}"
+      style="{{selected === item.value ? 'border-color:' + item.color + ';background:' + item.color + '18' : ''}}"
+      bindtap="onSelect"
+      data-type="{{item.value}}"
+    >
+      <view class="type-emoji-wrap" style="background:{{item.color}}18">
+        <text class="type-emoji">{{item.emoji}}</text>
+      </view>
+      <text class="type-label" style="{{selected === item.value ? 'color:' + item.color : ''}}">
+        {{item.label}}
+      </text>
+      <view class="type-check" wx:if="{{selected === item.value}}" style="background:{{item.color}}">
+        <text>✓</text>
+      </view>
+    </view>
+  </view>
+</view>

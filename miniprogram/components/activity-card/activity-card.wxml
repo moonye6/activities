@@ -1,0 +1,45 @@
+<!-- components/activity-card/activity-card.wxml -->
+<view class="act-card card {{activity.status === 'ended' ? 'act-card--ended' : ''}}" bindtap="onTap">
+  <!-- 左侧类型色条 -->
+  <view class="act-card__stripe" style="background:{{typeInfo.color}}"></view>
+
+  <view class="act-card__body">
+    <!-- 顶部：标题 + 状态角标 -->
+    <view class="act-card__header">
+      <view class="act-card__title text-clamp1">{{activity.title}}</view>
+      <view class="act-card__status tag {{statusInfo.tagClass}}">{{statusInfo.label}}</view>
+    </view>
+
+    <!-- 类型标签 -->
+    <view class="act-card__type">
+      <text class="act-card__type-emoji">{{typeInfo.emoji}}</text>
+      <text class="act-card__type-label">{{typeInfo.label}}</text>
+    </view>
+
+    <!-- 时间地点 -->
+    <view class="act-card__meta">
+      <view class="act-card__meta-item">
+        <text class="act-card__meta-icon">🕐</text>
+        <text class="act-card__meta-text">{{timeLabel}}</text>
+      </view>
+      <view class="act-card__meta-item" wx:if="{{activity.location}}">
+        <text class="act-card__meta-icon">📍</text>
+        <text class="act-card__meta-text text-clamp1">{{activity.location}}</text>
+      </view>
+    </view>
+
+    <!-- 底部：参与进度 + 用户数 -->
+    <view class="act-card__footer">
+      <view class="act-card__progress-wrap">
+        <view class="act-card__progress-bar">
+          <view class="act-card__progress-fill" style="width:{{progressPct}}%;background:{{typeInfo.color}}"></view>
+        </view>
+        <text class="act-card__count">{{rsvpCounts.yes}}/{{activity.maxCount}}人</text>
+      </view>
+      <view class="act-card__my-status" wx:if="{{myRsvp}}">
+        <text class="act-card__my-status-dot" style="color:{{myRsvpInfo.color}}">●</text>
+        <text class="act-card__my-status-label">{{myRsvpInfo.label}}</text>
+      </view>
+    </view>
+  </view>
+</view>

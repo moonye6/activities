@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "活动圈",
+  "usingComponents": {
+    "activity-card": "/components/activity-card/activity-card"
+  }
+}

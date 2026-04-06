@@ -1,0 +1,80 @@
+<!-- pages/index/index.wxml — 首页：活动列表 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="navbar">
+    <view class="navbar__brand">
+      <text class="navbar__logo">🎯</text>
+      <text class="navbar__title">活动圈</text>
+    </view>
+    <view class="navbar__actions">
+      <view class="navbar__btn" bindtap="onSearch">
+        <text>🔍</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类 Tab -->
+  <view class="tab-bar">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="value"
+      class="tab-bar__item {{activeTab === item.value ? 'tab-bar__item--active' : ''}}"
+      bindtap="onTabChange"
+      data-value="{{item.value}}"
+    >
+      <text>{{item.label}}</text>
+      <view class="tab-bar__badge" wx:if="{{item.count > 0}}">{{item.count}}</view>
+    </view>
+  </view>
+
+  <!-- 活动列表 -->
+  <scroll-view
+    class="list-scroll"
+    scroll-y
+    refresher-enabled
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+    bindscrolltolower="onLoadMore"
+  >
+    <!-- loading 骨架 -->
+    <view class="skeleton-wrap" wx:if="{{loading && activities.length === 0}}">
+      <view class="skeleton-card" wx:for="{{[1,2,3]}}" wx:key="*this">
+        <view class="skeleton-stripe"></view>
+        <view class="skeleton-body">
+          <view class="skeleton-line skeleton-line--title"></view>
+          <view class="skeleton-line skeleton-line--short"></view>
+          <view class="skeleton-line skeleton-line--medium"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{!loading && activities.length === 0}}">
+      <text class="empty-icon">🎈</text>
+      <text>{{emptyText}}</text>
+      <view class="btn btn-primary mt-24" style="width:240rpx" bindtap="onCreateTap">
+        发起第一个活动
+      </view>
+    </view>
+
+    <!-- 活动卡片流 -->
+    <block wx:else>
+      <activity-card
+        wx:for="{{activities}}"
+        wx:key="_id"
+        activity="{{item}}"
+        currentUserId="{{currentUserId}}"
+        bindtap="onCardTap"
+      />
+      <view class="list-footer">
+        <text wx:if="{{noMore}}" class="list-footer__text">已经到底啦 ~</text>
+        <text wx:elif="{{loadingMore}}" class="list-footer__text">加载中...</text>
+      </view>
+    </block>
+  </scroll-view>
+
+  <!-- FAB 发起按钮 -->
+  <view class="fab" bindtap="onCreateTap" hover-class="fab--pressed">
+    <text class="fab__icon">+</text>
+  </view>
+</view>

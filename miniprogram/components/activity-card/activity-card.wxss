@@ -1,0 +1,153 @@
+/* components/activity-card/activity-card.wxss */
+
+.act-card {
+  display: flex;
+  flex-direction: row;
+  margin: 0 32rpx 24rpx;
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: transform 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+
+.act-card:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+.act-card--ended {
+  opacity: 0.65;
+}
+
+/* 左侧色条 */
+.act-card__stripe {
+  width: 8rpx;
+  flex-shrink: 0;
+}
+
+/* 内容区 */
+.act-card__body {
+  flex: 1;
+  padding: 24rpx 24rpx 20rpx;
+  overflow: hidden;
+}
+
+/* 标题行 */
+.act-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12rpx;
+  margin-bottom: 10rpx;
+}
+
+.act-card__title {
+  flex: 1;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.act-card__status {
+  flex-shrink: 0;
+  font-size: 20rpx;
+  padding: 4rpx 14rpx;
+  border-radius: var(--radius-full);
+}
+
+/* 类型标签 */
+.act-card__type {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  margin-bottom: 14rpx;
+}
+
+.act-card__type-emoji {
+  font-size: 22rpx;
+}
+
+.act-card__type-label {
+  font-size: 22rpx;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* 时间地点 */
+.act-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+  margin-bottom: 16rpx;
+}
+
+.act-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.act-card__meta-icon {
+  font-size: 22rpx;
+  flex-shrink: 0;
+}
+
+.act-card__meta-text {
+  font-size: 24rpx;
+  color: var(--color-text-secondary);
+  flex: 1;
+}
+
+/* 底部进度 */
+.act-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.act-card__progress-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.act-card__progress-bar {
+  flex: 1;
+  height: 6rpx;
+  background: var(--color-bg);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.act-card__progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease;
+}
+
+.act-card__count {
+  font-size: 22rpx;
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+}
+
+/* 我的状态 */
+.act-card__my-status {
+  display: flex;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.act-card__my-status-dot {
+  font-size: 16rpx;
+}
+
+.act-card__my-status-label {
+  font-size: 22rpx;
+  color: var(--color-text-secondary);
+}

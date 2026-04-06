@@ -1,0 +1,75 @@
+<!-- pages/profile/profile.wxml — 个人中心 -->
+<view class="page profile-page">
+  <!-- 头部背景区 -->
+  <view class="profile-header">
+    <view class="header-bg"></view>
+    <view class="header-content">
+      <view class="profile-avatar" style="background:{{avatarColor}}">
+        <text class="profile-avatar__text">{{avatarText}}</text>
+      </view>
+      <view class="profile-nickname">{{userInfo.nickName || '未登录'}}</view>
+      <view class="profile-since">加入于 {{joinedAt}}</view>
+    </view>
+  </view>
+
+  <!-- 数据统计卡 -->
+  <view class="stats-card card">
+    <view class="stat-item">
+      <text class="stat-num">{{stats.created}}</text>
+      <text class="stat-label">发起活动</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-num">{{stats.joined}}</text>
+      <text class="stat-label">参与活动</text>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <text class="stat-num">{{stats.ended}}</text>
+      <text class="stat-label">已完成</text>
+    </view>
+  </view>
+
+  <!-- 标签区 -->
+  <view class="section-title">我的标签</view>
+  <view class="my-tags card card-padding">
+    <view wx:if="{{userInfo.tags && userInfo.tags.length}}" class="tags-wrap">
+      <text wx:for="{{userInfo.tags}}" wx:key="*this" class="tag tag-primary">{{item}}</text>
+    </view>
+    <text wx:else class="empty-tags">暂无标签，在活动中添加标签后会展示在这里</text>
+  </view>
+
+  <!-- 活动记录 -->
+  <view class="section-title">活动记录
+    <text class="section-count">共 {{myActivities.length}} 个</text>
+  </view>
+
+  <view wx:if="{{myActivities.length === 0}}" class="empty-state">
+    <text class="empty-icon">🎈</text>
+    <text>还没有活动记录</text>
+  </view>
+
+  <view wx:else class="activity-list">
+    <view
+      wx:for="{{myActivities}}"
+      wx:key="_id"
+      class="history-card card"
+      bindtap="onActivityTap"
+      data-id="{{item._id}}"
+    >
+      <view class="history-stripe" style="background:{{item.typeInfo.color}}"></view>
+      <view class="history-body">
+        <view class="history-header">
+          <text class="history-title text-clamp1">{{item.title}}</text>
+          <view class="tag {{item.statusInfo.tagClass}}">{{item.statusInfo.label}}</view>
+        </view>
+        <view class="history-meta">
+          <text class="history-time">🕐 {{item.timeLabel}}</text>
+          <text class="history-role" style="color:{{item.roleColor}}">{{item.roleLabel}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view style="height:60rpx"></view>
+</view>
