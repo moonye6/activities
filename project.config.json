@@ -1,7 +1,7 @@
 {
   "description": "项目配置 - 微信小程序开发者工具",
   "projectname": "activities",
-  "appid": "YOUR_APPID",
+  "appid": "wxe4dd8e2c84d366d7",
   "setting": {
     "urlCheck": false,
     "es6": true,
