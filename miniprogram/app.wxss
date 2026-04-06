@@ -36,10 +36,6 @@ page {
   font-size: 26rpx;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-}
-
-/* ============ 重置 ============ */
-* {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }

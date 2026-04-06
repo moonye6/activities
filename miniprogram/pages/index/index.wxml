@@ -64,7 +64,7 @@
         wx:key="_id"
         activity="{{item}}"
         currentUserId="{{currentUserId}}"
-        bindtap="onCardTap"
+        bind:tap="onCardTap"
       />
       <view class="list-footer">
         <text wx:if="{{noMore}}" class="list-footer__text">已经到底啦 ~</text>
