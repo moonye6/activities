@@ -29,6 +29,9 @@ App({
           const newUser = {
             nickName: '新用户',
             avatarUrl: '',
+            gender: '',
+            company: '',
+            school: '',
             tags: [],
             createdAt: Date.now()
           }

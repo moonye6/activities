@@ -1,5 +1,6 @@
 // components/activity-card/activity-card.js
 const util = require('../../utils/util')
+const api = require('../../utils/api')
 
 Component({
   properties: {
@@ -24,7 +25,8 @@ Component({
     rsvpCounts: { yes: 0, maybe: 0, no: 0 },
     progressPct: 0,
     myRsvp: null,
-    myRsvpInfo: {}
+    myRsvpInfo: {},
+    displayTags: []
   },
 
   observers: {
@@ -46,6 +48,23 @@ Component({
       const myRsvp = (activity.rsvps || []).find(r => r.userId === currentUserId)
       const myRsvpInfo = myRsvp ? util.mapRsvpStatus(myRsvp.status) : null
 
+      // 处理标签展示
+      const tags = Array.isArray(activity.tags) ? activity.tags : []
+      const { systemTags } = api.getEnums()
+      const displayTags = tags.map(tag => {
+        if (tag && typeof tag === 'object' && tag.key) {
+          const def = systemTags.find(t => t.key === tag.key)
+          return {
+            key: tag.key,
+            label: def ? def.label : tag.key,
+            isIdentity: def ? def.category === 'identity' : false
+          }
+        }
+        // 兼容旧格式字符串
+        if (typeof tag === 'string') return { key: tag, label: tag, isIdentity: false }
+        return null
+      }).filter(Boolean).slice(0, 3)  // 卡片最多展示3个标签
+
       this.setData({
         typeInfo,
         statusInfo,
@@ -53,7 +72,8 @@ Component({
         rsvpCounts,
         progressPct,
         myRsvp,
-        myRsvpInfo
+        myRsvpInfo,
+        displayTags
       })
     },
 

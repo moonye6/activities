@@ -110,7 +110,7 @@ function mapVisibility(visibility) {
   const map = {
     friends: '朋友可见',
     public:  '公开',
-    tags:    '指定标签'
+    tags:    '标签可见（限定范围）'
   }
   return map[visibility] || '未知'
 }

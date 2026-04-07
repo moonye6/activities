@@ -46,12 +46,13 @@ Page({
     customTags: [],
     timeRange: [],
     timePickerVal: [0, 19, 0],
-    submitting: false
+    submitting: false,
+    userInfo: {}
   },
 
   _dateRange: [],
 
-  onLoad() {
+  async onLoad() {
     const { activityTypes, visibilityOptions, systemTags } = api.getEnums()
     const timeRange = genTimeRange()
     this._dateRange = []
@@ -65,6 +66,12 @@ Page({
         `${d.getFullYear()}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`
       )
     }
+
+    // 获取当前用户信息（传递给 tag-selector 用于身份标签显示）
+    let userInfo = {}
+    try {
+      userInfo = await api.getCurrentUser()
+    } catch (_) {}
 
     this.setData({
       // 每次进入重置表单
@@ -82,7 +89,8 @@ Page({
       visibilityOptions,
       systemTags,
       timeRange,
-      timePickerVal: [0, 19, 0]
+      timePickerVal: [0, 19, 0],
+      userInfo
     })
 
     this._updateTimeDisplay(0, 19, 0)
@@ -122,7 +130,20 @@ Page({
   },
 
   onVisibilityChange(e) {
-    this.setData({ 'form.visibility': e.currentTarget.dataset.value })
+    const value = e.currentTarget.dataset.value
+    this.setData({ 'form.visibility': value })
+    // 当切换到"指定标签"时，如果未选身份标签给个提示
+    if (value === 'tags') {
+      const { tags } = this.data.form
+      const { systemTags } = this.data
+      const hasIdentity = tags.some(key => {
+        const def = systemTags.find(t => t.key === key)
+        return def && def.category === 'identity'
+      })
+      if (!hasIdentity) {
+        wx.showToast({ title: '选择身份标签来限制可见范围', icon: 'none', duration: 2000 })
+      }
+    }
   },
 
   onCountChange(e) {
@@ -134,7 +155,19 @@ Page({
   },
 
   onTagChange(e) {
-    this.setData({ 'form.tags': e.detail.selected })
+    const selected = e.detail.selected
+    this.setData({ 'form.tags': selected })
+
+    // 如果选中了身份标签，自动切换 visibility 为 tags
+    const { systemTags } = this.data
+    const hasIdentity = selected.some(key => {
+      const def = systemTags.find(t => t.key === key)
+      return def && def.category === 'identity'
+    })
+    if (hasIdentity && this.data.form.visibility !== 'tags') {
+      this.setData({ 'form.visibility': 'tags' })
+      wx.showToast({ title: '已自动切换为标签可见', icon: 'none', duration: 1500 })
+    }
   },
 
   onCustomTagChange(e) {
@@ -142,7 +175,7 @@ Page({
   },
 
   async onSubmit() {
-    const { form } = this.data
+    const { form, systemTags } = this.data
     if (!form.title.trim()) {
       wx.showToast({ title: '请填写活动名称', icon: 'none' })
       return
@@ -159,10 +192,31 @@ Page({
     this.setData({ submitting: true })
     try {
       const userInfo = await api.getCurrentUser()
+
+      // 将选中的 tag key 转为对象格式
+      const tags = form.tags.map(key => {
+        // 自定义标签
+        if (key.startsWith('custom_')) {
+          return { key, matchField: null, matchValue: null }
+        }
+        const def = systemTags.find(t => t.key === key)
+        if (def && def.matchField) {
+          let matchValue = null
+          if (def.matchMode === 'exact') {
+            matchValue = userInfo[def.matchField] || null
+          } else if (def.matchMode === 'value') {
+            matchValue = def.matchValue
+          }
+          return { key, matchField: def.matchField, matchValue }
+        }
+        return { key, matchField: null, matchValue: null }
+      })
+
       const activity = await api.createActivity({
         ...form,
         title: form.title.trim(),
         location: form.location.trim(),
+        tags,
         creatorId: userInfo._id
       })
 

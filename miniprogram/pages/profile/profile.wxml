@@ -66,10 +66,100 @@
   <!-- 标签区 -->
   <view class="section-title">我的标签</view>
   <view class="my-tags card card-padding">
-    <view wx:if="{{userInfo.tags && userInfo.tags.length}}" class="tags-wrap">
-      <text wx:for="{{userInfo.tags}}" wx:key="*this" class="tag tag-primary">{{item}}</text>
+    <view wx:if="{{displayTags.length}}" class="tags-wrap">
+      <view
+        wx:for="{{displayTags}}"
+        wx:key="key"
+        class="tag {{item.isIdentity ? 'tag-identity' : 'tag-primary'}}"
+      >
+        <text wx:if="{{item.icon}}" class="tag-lock-icon">{{item.icon}}</text>
+        <text>{{item.label}}</text>
+        <text wx:if="{{item.hint}}" class="tag-hint"> · {{item.hint}}</text>
+      </view>
     </view>
     <text wx:else class="empty-tags">暂无标签，在活动中添加标签后会展示在这里</text>
+  </view>
+
+  <!-- 个人属性 -->
+  <view class="section-title">身份信息
+    <text class="section-count">用于身份标签匹配</text>
+  </view>
+  <view class="attr-card card">
+    <!-- 性别 -->
+    <picker mode="selector" range="{{genderOptions}}" range-key="label" bindchange="onGenderChange">
+      <view class="attr-cell">
+        <view class="attr-cell__left">
+          <text class="attr-cell__icon">👤</text>
+          <text class="attr-cell__label">性别</text>
+        </view>
+        <view class="attr-cell__right">
+          <text class="attr-cell__value">{{genderLabel}}</text>
+          <text class="attr-cell__arrow">›</text>
+        </view>
+      </view>
+    </picker>
+    <view class="attr-divider"></view>
+
+    <!-- 公司 -->
+    <view class="attr-cell" wx:if="{{!editingCompany}}" bindtap="onEditCompany">
+      <view class="attr-cell__left">
+        <text class="attr-cell__icon">🏢</text>
+        <text class="attr-cell__label">公司</text>
+      </view>
+      <view class="attr-cell__right">
+        <text class="attr-cell__value">{{userInfo.company || '未设置'}}</text>
+        <text class="attr-cell__arrow">›</text>
+      </view>
+    </view>
+    <view class="attr-cell attr-cell--editing" wx:if="{{editingCompany}}">
+      <view class="attr-cell__left">
+        <text class="attr-cell__icon">🏢</text>
+        <text class="attr-cell__label">公司</text>
+      </view>
+      <view class="attr-cell__input-wrap">
+        <input
+          class="attr-cell__input"
+          placeholder="输入公司名称"
+          value="{{companyInput}}"
+          bindinput="onCompanyInput"
+          bindconfirm="onCompanyConfirm"
+          bindblur="onCompanyConfirm"
+          focus="{{editingCompany}}"
+          maxlength="20"
+        />
+      </view>
+    </view>
+    <view class="attr-divider"></view>
+
+    <!-- 学校 -->
+    <view class="attr-cell" wx:if="{{!editingSchool}}" bindtap="onEditSchool">
+      <view class="attr-cell__left">
+        <text class="attr-cell__icon">🎓</text>
+        <text class="attr-cell__label">学校</text>
+      </view>
+      <view class="attr-cell__right">
+        <text class="attr-cell__value">{{userInfo.school || '未设置'}}</text>
+        <text class="attr-cell__arrow">›</text>
+      </view>
+    </view>
+    <view class="attr-cell attr-cell--editing" wx:if="{{editingSchool}}">
+      <view class="attr-cell__left">
+        <text class="attr-cell__icon">🎓</text>
+        <text class="attr-cell__label">学校</text>
+      </view>
+      <view class="attr-cell__input-wrap">
+        <input
+          class="attr-cell__input"
+          placeholder="输入学校名称"
+          value="{{schoolInput}}"
+          bindinput="onSchoolInput"
+          bindconfirm="onSchoolConfirm"
+          bindblur="onSchoolConfirm"
+          focus="{{editingSchool}}"
+          maxlength="20"
+        />
+      </view>
+    </view>
   </view>
 
   <!-- 活动记录 -->

@@ -2,17 +2,40 @@
 <view class="tag-sel">
   <view class="tag-sel__title" wx:if="{{title}}">{{title}}</view>
 
-  <!-- 系统标签 -->
-  <view class="tag-sel__section" wx:if="{{systemTags.length}}">
-    <view class="tag-sel__section-label">系统标签</view>
+  <!-- 身份标签（可见性过滤） -->
+  <view class="tag-sel__section" wx:if="{{identityTags.length}}">
+    <view class="tag-sel__section-label">
+      <text>🔒 身份标签</text>
+      <text class="tag-sel__section-hint">选中后仅匹配的人可见</text>
+    </view>
     <view class="tag-sel__list">
       <view
-        wx:for="{{systemTags}}"
-        wx:key="*this"
-        class="tag-sel__item {{selected.indexOf(item) !== -1 ? 'tag-sel__item--active' : ''}}"
+        wx:for="{{identityTags}}"
+        wx:key="key"
+        class="tag-sel__item tag-sel__item--identity {{selected.indexOf(item.key) !== -1 ? 'tag-sel__item--active tag-sel__item--identity-active' : ''}}"
         bindtap="onToggle"
+        data-key="{{item.key}}"
         data-tag="{{item}}"
-      >{{item}}</view>
+      >
+        <text class="tag-sel__item-icon">{{item.icon}}</text>
+        <text>{{item.label}}</text>
+        <text class="tag-sel__item-hint" wx:if="{{item.hint}}">{{item.hint}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 兴趣标签 -->
+  <view class="tag-sel__section" wx:if="{{interestTags.length}}">
+    <view class="tag-sel__section-label">兴趣标签</view>
+    <view class="tag-sel__list">
+      <view
+        wx:for="{{interestTags}}"
+        wx:key="key"
+        class="tag-sel__item {{selected.indexOf(item.key) !== -1 ? 'tag-sel__item--active' : ''}}"
+        bindtap="onToggle"
+        data-key="{{item.key}}"
+        data-tag="{{item}}"
+      >{{item.label}}</view>
     </view>
   </view>
 
@@ -23,8 +46,9 @@
       <view
         wx:for="{{customTags}}"
         wx:key="*this"
-        class="tag-sel__item {{selected.indexOf(item) !== -1 ? 'tag-sel__item--active' : ''}}"
+        class="tag-sel__item {{selected.indexOf('custom_' + item) !== -1 ? 'tag-sel__item--active' : ''}}"
         bindtap="onToggle"
+        data-key="{{'custom_' + item}}"
         data-tag="{{item}}"
       >{{item}}</view>
 

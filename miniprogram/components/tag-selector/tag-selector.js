@@ -2,23 +2,68 @@
 Component({
   properties: {
     title: { type: String, value: '' },
+    // 系统标签（结构化对象数组）
     systemTags: { type: Array, value: [] },
     customTags: { type: Array, value: [] },
+    // 已选中的标签 key 数组
     selected: { type: Array, value: [] },
     showCustom: { type: Boolean, value: true },
-    max: { type: Number, value: 5 }
+    max: { type: Number, value: 5 },
+    // 当前用户信息（用于身份标签显示属性值）
+    userInfo: { type: Object, value: {} }
   },
 
   data: {
     showInput: false,
-    inputVal: ''
+    inputVal: '',
+    identityTags: [],
+    interestTags: []
+  },
+
+  observers: {
+    'systemTags, userInfo': function(systemTags, userInfo) {
+      if (!Array.isArray(systemTags)) return
+      const identityTags = systemTags
+        .filter(t => t.category === 'identity')
+        .map(t => {
+          let hint = ''
+          if (userInfo && t.matchField) {
+            if (t.matchMode === 'exact') {
+              // 如：同事 - 腾讯
+              const val = userInfo[t.matchField]
+              hint = val ? ` · ${val}` : ' · 未设置'
+            } else if (t.matchMode === 'value') {
+              // 如：女生（固定值，无需显示用户值）
+              hint = ''
+            }
+          }
+          return { ...t, hint }
+        })
+      const interestTags = systemTags.filter(t => t.category === 'interest')
+      this.setData({ identityTags, interestTags })
+    }
   },
 
   methods: {
     onToggle(e) {
-      const tag = e.currentTarget.dataset.tag
+      const key = e.currentTarget.dataset.key
+      const tagDef = e.currentTarget.dataset.tag
       const selected = [...this.data.selected]
-      const idx = selected.indexOf(tag)
+      const idx = selected.indexOf(key)
+
+      // 身份标签检查：exact 类型需要用户已填属性
+      if (idx < 0 && tagDef && tagDef.category === 'identity' && tagDef.matchMode === 'exact') {
+        const userInfo = this.data.userInfo || {}
+        const val = userInfo[tagDef.matchField]
+        if (!val) {
+          wx.showToast({
+            title: `请先在个人中心设置${tagDef.matchField === 'company' ? '公司' : '学校'}`,
+            icon: 'none'
+          })
+          return
+        }
+      }
+
       if (idx >= 0) {
         selected.splice(idx, 1)
       } else {
@@ -26,7 +71,7 @@ Component({
           wx.showToast({ title: `最多选${this.data.max}个标签`, icon: 'none' })
           return
         }
-        selected.push(tag)
+        selected.push(key)
       }
       this.triggerEvent('change', { selected })
     },
@@ -45,14 +90,16 @@ Component({
         this.setData({ showInput: false })
         return
       }
+      // 自定义标签用 custom_ 前缀作为 key
+      const key = 'custom_' + val
       const customTags = [...this.data.customTags]
       const selected = [...this.data.selected]
       if (!customTags.includes(val)) {
         customTags.push(val)
       }
-      if (!selected.includes(val)) {
+      if (!selected.includes(key)) {
         if (selected.length < this.data.max) {
-          selected.push(val)
+          selected.push(key)
         }
       }
       this.setData({ showInput: false, inputVal: '' })

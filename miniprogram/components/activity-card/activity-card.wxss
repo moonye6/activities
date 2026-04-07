@@ -81,7 +81,35 @@
   display: flex;
   flex-direction: column;
   gap: 6rpx;
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+/* 标签 */
+.act-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-bottom: 12rpx;
+}
+
+.act-card__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4rpx;
+  padding: 2rpx 14rpx;
+  border-radius: 100rpx;
+  font-size: 20rpx;
+  background: var(--color-primary-pale);
+  color: var(--color-primary);
+}
+
+.act-card__tag--identity {
+  background: rgba(255, 149, 0, 0.1);
+  color: #FF9500;
+}
+
+.act-card__tag-lock {
+  font-size: 16rpx;
 }
 
 .act-card__meta-item {

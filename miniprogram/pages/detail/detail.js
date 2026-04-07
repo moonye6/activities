@@ -12,6 +12,22 @@ const COVER_GRADIENTS = {
   other:  'linear-gradient(135deg, #8E8E93 0%, #AEAEB2 100%)'
 }
 
+// 从系统标签定义中获取标签的显示信息
+function resolveTagDisplay(tag) {
+  const { systemTags } = api.getEnums()
+  if (!tag || typeof tag !== 'object') return null
+  const def = systemTags.find(t => t.key === tag.key)
+  const label = def ? def.label : tag.key
+  const isIdentity = def ? def.category === 'identity' : false
+  let hint = ''
+  if (isIdentity && tag.matchValue) {
+    if (def.matchMode === 'exact') {
+      hint = tag.matchValue  // 如 "腾讯"
+    }
+  }
+  return { key: tag.key, label, isIdentity, hint, icon: isIdentity ? '🔒' : '' }
+}
+
 Page({
   data: {
     activity: null,
@@ -28,7 +44,8 @@ Page({
     creatorInfo: {},
     createdAtLabel: '',
     coverGradient: COVER_GRADIENTS.other,
-    currentUserId: ''
+    currentUserId: '',
+    displayTags: []       // 处理后的标签展示数据
   },
 
   _actId: '',
@@ -55,7 +72,6 @@ Page({
       const typeInfo = util.mapActivityType(activity.type)
       const statusInfo = util.mapActivityStatus(activity.status)
       const timeLabel = util.formatTime(activity.time)
-      const visibilityLabel = util.mapVisibility(activity.visibility)
       const rsvpCounts = util.countRsvps(activity.rsvps)
       const progressPct = activity.maxCount > 0
         ? Math.min(100, Math.round((rsvpCounts.yes / activity.maxCount) * 100))
@@ -65,6 +81,20 @@ Page({
       const isCreator = activity.creatorId === currentUserId
       const coverGradient = COVER_GRADIENTS[activity.type] || COVER_GRADIENTS.other
       const createdAtLabel = util.formatTimestamp(activity.createdAt, 'relative')
+
+      // 处理标签展示
+      const tags = Array.isArray(activity.tags) ? activity.tags : []
+      const displayTags = tags.map(resolveTagDisplay).filter(Boolean)
+
+      // 可见范围文案升级
+      let visibilityLabel = util.mapVisibility(activity.visibility)
+      if (activity.visibility === 'tags') {
+        const identityTags = displayTags.filter(t => t.isIdentity)
+        if (identityTags.length > 0) {
+          const names = identityTags.map(t => t.hint ? `${t.label}(${t.hint})` : t.label).join('、')
+          visibilityLabel = `仅 ${names} 可见`
+        }
+      }
 
       // 加载参与者信息
       const participantIds = activity.rsvps.map(r => r.userId)
@@ -105,7 +135,8 @@ Page({
         isCreator,
         coverGradient,
         createdAtLabel,
-        creatorInfo
+        creatorInfo,
+        displayTags
       })
     } catch (e) {
       this.setData({ loading: false })

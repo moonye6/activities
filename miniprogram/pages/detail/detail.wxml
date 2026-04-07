@@ -50,12 +50,20 @@
         </view>
         <view class="info-divider"></view>
 
-        <view class="info-row" wx:if="{{activity.tags.length}}">
+        <view class="info-row" wx:if="{{displayTags.length}}">
           <text class="info-icon">🏷</text>
           <view class="info-content">
             <text class="info-label">标签</text>
             <view class="info-tags">
-              <text wx:for="{{activity.tags}}" wx:key="*this" class="tag tag-primary">{{item}}</text>
+              <view
+                wx:for="{{displayTags}}"
+                wx:key="key"
+                class="tag {{item.isIdentity ? 'tag-identity' : 'tag-primary'}}"
+              >
+                <text wx:if="{{item.isIdentity}}" class="tag-lock-icon">{{item.icon}}</text>
+                <text>{{item.label}}</text>
+                <text wx:if="{{item.hint}}" class="tag-hint"> · {{item.hint}}</text>
+              </view>
             </view>
           </view>
         </view>

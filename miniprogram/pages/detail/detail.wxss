@@ -114,6 +114,28 @@
   margin-top: 4rpx;
 }
 
+/* 身份标签样式 */
+.tag-identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 4rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 100rpx;
+  font-size: 22rpx;
+  background: rgba(255, 149, 0, 0.1);
+  color: #FF9500;
+  border: 1rpx solid rgba(255, 149, 0, 0.3);
+}
+
+.tag-lock-icon {
+  font-size: 18rpx;
+}
+
+.tag-hint {
+  font-size: 20rpx;
+  opacity: 0.8;
+}
+
 .info-divider {
   height: 1rpx;
   background: var(--color-border);

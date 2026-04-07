@@ -11,10 +11,22 @@ Page({
     avatarColor: '',
     joinedAt: '',
     editingNick: false,
-    nickNameInput: ''
+    nickNameInput: '',
+    // 属性编辑相关
+    genderOptions: [],
+    genderLabel: '',
+    editingCompany: false,
+    editingSchool: false,
+    companyInput: '',
+    schoolInput: '',
+    // 结构化标签展示
+    displayTags: []
   },
 
   async onLoad() {
+    const { genderOptions, systemTags } = api.getEnums()
+    this.setData({ genderOptions })
+    this._systemTags = systemTags
     await this._loadProfile()
   },
 
@@ -52,13 +64,35 @@ Page({
           return { ...a, typeInfo, statusInfo, timeLabel, roleLabel, roleColor }
         })
 
+      // 构建展示标签
+      const systemTags = this._systemTags || []
+      const displayTags = (userInfo.tags || []).map(key => {
+        const def = systemTags.find(t => t.key === key)
+        if (def) {
+          let hint = ''
+          if (def.category === 'identity' && def.matchMode === 'exact') {
+            hint = userInfo[def.matchField] || '未设置'
+          }
+          return { key, label: def.label, isIdentity: def.category === 'identity', hint, icon: def.icon || '' }
+        }
+        return { key, label: key, isIdentity: false, hint: '', icon: '' }
+      })
+
+      // 性别文案
+      const genderMap = { male: '男', female: '女', other: '其他' }
+      const genderLabel = genderMap[userInfo.gender] || '未设置'
+
       this.setData({
         userInfo,
         stats,
         myActivities,
         avatarText: util.avatarPlaceholder(userInfo.nickName),
         avatarColor: util.avatarColor(userInfo._id),
-        joinedAt: util.formatTimestamp(userInfo.createdAt, 'date')
+        joinedAt: util.formatTimestamp(userInfo.createdAt, 'date'),
+        genderLabel,
+        companyInput: userInfo.company || '',
+        schoolInput: userInfo.school || '',
+        displayTags
       })
     } catch (e) {
       console.error(e)
@@ -107,10 +141,6 @@ Page({
   // ---- 昵称编辑 ----
   onEditNick() {
     this.setData({ editingNick: true, nickNameInput: this.data.userInfo.nickName })
-  },
-
-  onNickInput(e) {
-    this.setData({ nickNameInput: e.detail.value })
   },
 
   onNickInput(e) {
@@ -163,6 +193,67 @@ Page({
       console.error('[_saveNick] error:', err)
       wx.showToast({ title: '更新失败：' + (err.message || err.errMsg || '未知错误'), icon: 'none' })
       this.setData({ editingNick: false })
+    }
+  },
+
+  // ---- 属性编辑：性别 ----
+  onGenderChange(e) {
+    const idx = e.detail.value
+    const option = this.data.genderOptions[idx]
+    if (!option) return
+    this._saveField('gender', option.value, option.label)
+  },
+
+  // ---- 属性编辑：公司 ----
+  onEditCompany() {
+    this.setData({ editingCompany: true, companyInput: this.data.userInfo.company || '' })
+  },
+
+  onCompanyInput(e) {
+    this.setData({ companyInput: e.detail.value })
+  },
+
+  onCompanyConfirm() {
+    const val = this.data.companyInput.trim()
+    this.setData({ editingCompany: false })
+    if (val === (this.data.userInfo.company || '')) return
+    this._saveField('company', val)
+  },
+
+  // ---- 属性编辑：学校 ----
+  onEditSchool() {
+    this.setData({ editingSchool: true, schoolInput: this.data.userInfo.school || '' })
+  },
+
+  onSchoolInput(e) {
+    this.setData({ schoolInput: e.detail.value })
+  },
+
+  onSchoolConfirm() {
+    const val = this.data.schoolInput.trim()
+    this.setData({ editingSchool: false })
+    if (val === (this.data.userInfo.school || '')) return
+    this._saveField('school', val)
+  },
+
+  // ---- 通用保存字段 ----
+  async _saveField(field, value, displayValue) {
+    try {
+      const userInfo = await api.getCurrentUser()
+      await api.updateUserInfo(userInfo._id, { [field]: value })
+      const app = getApp()
+      app.globalData.userInfo = { ...app.globalData.userInfo, [field]: value }
+      this.setData({ [`userInfo.${field}`]: value })
+
+      if (field === 'gender') {
+        this.setData({ genderLabel: displayValue || value })
+      }
+
+      wx.showToast({ title: '已更新', icon: 'success' })
+      // 刷新标签显示
+      this._loadProfile()
+    } catch (err) {
+      wx.showToast({ title: '保存失败', icon: 'error' })
     }
   },
 

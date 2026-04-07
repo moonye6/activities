@@ -28,6 +28,18 @@
       </view>
     </view>
 
+    <!-- 标签 -->
+    <view class="act-card__tags" wx:if="{{displayTags.length}}">
+      <view
+        wx:for="{{displayTags}}"
+        wx:key="key"
+        class="act-card__tag {{item.isIdentity ? 'act-card__tag--identity' : ''}}"
+      >
+        <text wx:if="{{item.isIdentity}}" class="act-card__tag-lock">🔒</text>
+        <text>{{item.label}}</text>
+      </view>
+    </view>
+
     <!-- 底部：参与进度 + 用户数 -->
     <view class="act-card__footer">
       <view class="act-card__progress-wrap">

@@ -105,6 +105,7 @@ async function getUsersByIds(userIds) {
 /**
  * 获取活动列表
  * juwu 集合权限需设为"所有用户可读，仅创建者可写"
+ * 新增：基于标签的可见性过滤
  */
 async function getActivities({ tab = 'all', currentUserId } = {}) {
   let query
@@ -122,15 +123,56 @@ async function getActivities({ tab = 'all', currentUserId } = {}) {
 
   const { data } = await query.get()
 
+  let filtered = data
+
   if (tab === 'joined') {
-    return data.filter(a =>
+    filtered = data.filter(a =>
       a.creatorId !== currentUserId &&
       Array.isArray(a.rsvps) &&
       a.rsvps.some(r => r.userId === currentUserId && r.status === 'yes')
     )
   }
 
-  return data
+  // ── 标签可见性过滤 ──
+  if (currentUserId && tab !== 'mine') {
+    // 获取当前用户信息（用于属性匹配）
+    let currentUser = null
+    try {
+      currentUser = getApp().globalData.userInfo
+      if (!currentUser || currentUser._id !== currentUserId) {
+        const { data: userData } = await userCol().doc(currentUserId).get()
+        currentUser = userData
+      }
+    } catch (_) {}
+
+    filtered = filtered.filter(act => {
+      // 发布者自己始终可见
+      if (act.creatorId === currentUserId) return true
+      // public / friends 保持原逻辑
+      if (act.visibility !== 'tags') return true
+      // visibility === 'tags' 时进行标签过滤
+      const tags = Array.isArray(act.tags) ? act.tags : []
+      // 取出身份标签（有 matchField 的）
+      const identityTags = tags.filter(t => t && t.matchField)
+      // 如果没有身份标签，仅含兴趣标签，不做过滤
+      if (identityTags.length === 0) return true
+      // 如果没有用户信息，不可见
+      if (!currentUser) return false
+      // OR 逻辑：任一身份标签匹配即可见
+      return identityTags.some(t => {
+        const userValue = currentUser[t.matchField]
+        if (!userValue) return false
+        if (t.matchMode === 'value') {
+          // 固定值匹配（如性别标签）：用户属性 === 标签指定值
+          return userValue === t.matchValue
+        }
+        // exact 匹配（如同事/同学）：用户属性 === 发布者快照值
+        return userValue === t.matchValue
+      })
+    })
+  }
+
+  return filtered
 }
 
 /**
@@ -148,10 +190,61 @@ async function getActivityById(actId) {
 
 /**
  * 创建活动
+ * 新增：自动为身份标签快照发布者的属性值
  */
 async function createActivity(data) {
+  // 如果标签中有身份标签，自动填入发布者的属性快照
+  let tags = data.tags || []
+  if (tags.length > 0) {
+    let creator = null
+    try {
+      creator = getApp().globalData.userInfo
+      if (!creator || creator._id !== data.creatorId) {
+        const { data: userData } = await userCol().doc(data.creatorId).get()
+        creator = userData
+      }
+    } catch (_) {}
+
+    if (creator) {
+      const { SYSTEM_TAGS } = mock
+      tags = tags.map(tag => {
+        // 如果已经是对象格式（前端组装好的）
+        if (tag && typeof tag === 'object' && tag.key) {
+          const def = SYSTEM_TAGS.find(t => t.key === tag.key)
+          if (def && def.matchField) {
+            // 快照发布者属性值
+            let matchValue = tag.matchValue
+            if (def.matchMode === 'exact') {
+              matchValue = creator[def.matchField] || null
+            } else if (def.matchMode === 'value') {
+              matchValue = def.matchValue
+            }
+            return { key: tag.key, matchField: def.matchField, matchValue }
+          }
+          return { key: tag.key, matchField: null, matchValue: null }
+        }
+        // 兼容旧格式（纯 key 字符串）
+        if (typeof tag === 'string') {
+          const def = SYSTEM_TAGS.find(t => t.key === tag)
+          if (def && def.matchField) {
+            let matchValue = null
+            if (def.matchMode === 'exact') {
+              matchValue = creator[def.matchField] || null
+            } else if (def.matchMode === 'value') {
+              matchValue = def.matchValue
+            }
+            return { key: tag, matchField: def.matchField, matchValue }
+          }
+          return { key: tag, matchField: null, matchValue: null }
+        }
+        return tag
+      })
+    }
+  }
+
   const newData = {
     ...data,
+    tags,
     status: 'recruiting',
     rsvps: [{ userId: data.creatorId, status: 'yes' }],
     createdAt: Date.now()
@@ -233,7 +326,8 @@ function getEnums() {
   return {
     activityTypes: mock.ACTIVITY_TYPES,
     visibilityOptions: mock.VISIBILITY_OPTIONS,
-    systemTags: mock.SYSTEM_TAGS
+    systemTags: mock.SYSTEM_TAGS,
+    genderOptions: mock.GENDER_OPTIONS
   }
 }
 

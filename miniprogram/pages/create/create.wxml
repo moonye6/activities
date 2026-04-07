@@ -107,12 +107,17 @@
     <view class="form-section-title">活动标签
       <text class="form-section-hint">（最多5个）</text>
     </view>
+    <view class="tag-visibility-hint" wx:if="{{form.visibility === 'tags'}}">
+      <text class="tag-visibility-hint__icon">🔒</text>
+      <text class="tag-visibility-hint__text">选中的身份标签将限制活动可见范围</text>
+    </view>
     <view class="tags-card card card-padding">
       <tag-selector
         systemTags="{{systemTags}}"
         customTags="{{customTags}}"
         selected="{{form.tags}}"
         showCustom="{{true}}"
+        userInfo="{{userInfo}}"
         bindchange="onTagChange"
         bindcustomChange="onCustomTagChange"
       />
