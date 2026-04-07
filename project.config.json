@@ -8,7 +8,7 @@
     "enhance": true,
     "postcss": true,
     "preloadBackgroundData": false,
-    "minified": false,
+    "minified": true,
     "newFeature": true,
     "coverView": true,
     "nodeModules": false,
@@ -31,12 +31,12 @@
     },
     "enableEngineNative": false,
     "useIsolateContext": true,
-    "userConfirmedBundleSwitch": false,
+    "userConfirmedBundleSwitch": true,
     "packNpmManually": false,
     "packNpmRelationList": [],
     "minifyWXSS": true,
     "disableUseStrict": false,
-    "minifyWXML": false,
+    "minifyWXML": true,
     "showES6CompileOption": false,
     "useCompilerPlugins": false,
     "condition": false
@@ -48,7 +48,15 @@
   "srcMiniprogramRoot": "miniprogram/",
   "condition": {},
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "resources" },
+      { "type": "glob",   "value": "**/*.log" },
+      { "type": "glob",   "value": "**/.DS_Store" },
+      { "type": "glob",   "value": "node_modules/**" },
+      { "type": "glob",   "value": "scripts/**" },
+      { "type": "glob",   "value": ".husky/**" },
+      { "type": "glob",   "value": "CONTRIBUTING.md" }
+    ],
     "include": []
   },
   "editorSetting": {

@@ -38,8 +38,6 @@
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
-  "usingComponents": {
-    "activity-card": "/components/activity-card/activity-card",
-    "tag-selector": "/components/tag-selector/tag-selector"
-  }
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {}
 }

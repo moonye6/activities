@@ -1,0 +1,13 @@
+{
+  "name": "activities-miniprogram",
+  "version": "1.0.0",
+  "description": "活动圈微信小程序",
+  "private": true,
+  "scripts": {
+    "check": "node scripts/check-build.js",
+    "prepare": "husky install || true"
+  },
+  "devDependencies": {
+    "husky": "^9.0.11"
+  }
+}
